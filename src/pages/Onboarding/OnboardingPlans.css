@@ -1,0 +1,161 @@
+/* Onboarding Plans Page Styles */
+
+.onboarding-plans-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.op-main-content {
+  flex: 1;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+.op-main-content.op-main-content--collapsed {
+  margin-left: 80px;
+}
+
+.op-navbar {
+  position: fixed;
+  top: 0;
+  left: 250px;
+  right: 0;
+  z-index: 1000;
+  transition: left 0.3s ease;
+}
+
+.op-navbar--collapsed {
+  left: 80px;
+}
+
+.op-content {
+  padding-top: 80px;
+  padding: 24px;
+  min-height: calc(100vh - 80px);
+}
+
+.op-content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.op-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.op-header__left {
+  flex: 1;
+}
+
+.op-header__title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.op-header__subtitle {
+  color: #6b7280;
+  margin: 0;
+}
+
+.op-header__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.op-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.op-btn--primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.op-btn--primary:hover {
+  background-color: #2563eb;
+}
+
+.op-btn--secondary {
+  background-color: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.op-btn--secondary:hover {
+  background-color: #f9fafb;
+}
+
+/* Card Styles */
+.op-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.op-card__content {
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.op-placeholder {
+  color: #6b7280;
+  font-size: 1.125rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .op-main-content {
+    margin-left: 0;
+  }
+  
+  .op-main-content.op-main-content--collapsed {
+    margin-left: 0;
+  }
+  
+  .op-navbar {
+    left: 0;
+  }
+  
+  .op-navbar--collapsed {
+    left: 0;
+  }
+  
+  .op-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .op-header__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .op-content {
+    padding: 16px;
+  }
+  
+  .op-card__content {
+    padding: 32px 20px;
+  }
+}

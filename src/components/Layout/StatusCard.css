@@ -1,0 +1,72 @@
+.status-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Ensures padding is inside */
+}
+
+.status-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  background-color: #f9f9f9; /* Slightly different background for header */
+}
+
+.status-card-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.status-card-header .add-button {
+  background-color: #2ecc71; /* Green color */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.status-card-header .add-button:hover {
+  background-color: #27ae60;
+}
+
+.status-card-content {
+  padding: 20px;
+  flex-grow: 1; /* Allows content to take available space */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.no-records {
+  text-align: center;
+  color: #999;
+}
+
+.no-records .search-icon {
+  font-size: 60px;
+  display: block;
+  margin-bottom: 10px;
+  color: #ccc;
+}
+
+.no-records p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.no-records-message {
+  font-size: 14px;
+}

@@ -1,0 +1,241 @@
+/* Attendance Records Page Styles */
+
+.attendance-records-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.ar-main-content {
+  flex: 1;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+.ar-main-content.ar-main-content--collapsed {
+  margin-left: 80px;
+}
+
+.ar-navbar {
+  position: fixed;
+  top: 0;
+  left: 250px;
+  right: 0;
+  z-index: 1000;
+  transition: left 0.3s ease;
+}
+
+.ar-navbar--collapsed {
+  left: 80px;
+}
+
+.ar-content {
+  padding-top: 80px;
+  padding: 24px;
+  min-height: calc(100vh - 80px);
+}
+
+.ar-content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.ar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.ar-header__left {
+  flex: 1;
+}
+
+.ar-header__title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.ar-header__subtitle {
+  color: #6b7280;
+  margin: 0;
+}
+
+.ar-header__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.ar-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ar-btn--primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.ar-btn--primary:hover {
+  background-color: #2563eb;
+}
+
+.ar-btn--secondary {
+  background-color: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.ar-btn--secondary:hover {
+  background-color: #f9fafb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ar-main-content {
+    margin-left: 0;
+  }
+  
+  .ar-main-content.ar-main-content--collapsed {
+    margin-left: 0;
+  }
+  
+  .ar-navbar {
+    left: 0;
+  }
+  
+  .ar-navbar--collapsed {
+    left: 0;
+  }
+  
+  .ar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .ar-header__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .ar-content {
+    padding: 16px;
+  }
+}
+
+/* Controls Section */
+.ar-controls {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.ar-search-field {
+  position: relative;
+  flex: 1;
+  min-width: 300px;
+}
+
+.ar-search-field__icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+.ar-search-field__input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease;
+}
+
+.ar-search-field__input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.ar-filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ar-select {
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.ar-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Card Styles */
+.ar-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.ar-card__content {
+  padding: 48px 24px;
+}
+
+/* Empty State */
+.ar-empty-state {
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.ar-empty-state__icon {
+  margin: 0 auto 24px;
+  color: #9ca3af;
+  display: flex;
+  justify-content: center;
+}
+
+.ar-empty-state__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 12px 0;
+}
+
+.ar-empty-state__message {
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.ar-empty-state__icon svg {
+  width: 64px;
+  height: 64px;
+}

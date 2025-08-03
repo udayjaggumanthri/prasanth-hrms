@@ -1,0 +1,216 @@
+/* Sidebar.css */
+
+.oh-sidebar {
+  width: 280px; /* Default width */
+  background-color: #2d3748; /* Dark grey */
+  color: #a0aec0; /* Light grey text */
+  padding: 1.5rem 0.5rem;
+  transition: width 0.3s ease-in-out; /* Smooth transition for collapse/expand */
+  flex-shrink: 0; /* Prevent sidebar from shrinking */
+  height: 100vh; /* Full viewport height */
+  overflow-y: auto; /* Enable scrolling for long content */
+  overflow-x: hidden; /* Hide horizontal overflow */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999; /* Ensure sidebar is above main content */
+}
+
+.oh-sidebar.collapsed {
+  width: 80px; /* Collapsed width */
+}
+
+.oh-sidebar__company {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem 1.5rem; /* Padding for the header */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separator */
+  margin-bottom: 1.5rem;
+  box-sizing: content-box; /* To prevent padding from affecting width transition */
+}
+
+.oh-sidebar.collapsed .oh-sidebar__company {
+  justify-content: center;
+  padding: 0 0.5rem 1.5rem;
+}
+
+.oh-sidebar__company-initials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #4299e1; /* Example blue */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.oh-sidebar__company-details {
+  margin-left: 1rem;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.oh-sidebar__company-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.oh-sidebar__company-link {
+  font-size: 10px;
+  color: #718096;
+  text-decoration: none;
+}
+
+.oh-sidebar__company-link:hover {
+  color: #fff;
+}
+
+
+.oh-sidebar__menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.oh-sidebar__menu-item {
+  margin-bottom: 0.5rem;
+  position: relative; /* For submenu positioning */
+}
+
+.oh-sidebar__menu-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  color: #a0aec0;
+  text-decoration: none;
+  font-size: 0.95rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s, color 0.2s;
+  overflow: hidden; /* Hide overflowing text when collapsed */
+  white-space: nowrap;
+}
+
+.oh-sidebar__menu-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+/* Active state for main menu items */
+.oh-sidebar__menu-link.oh-sidebar__menu-link--active {
+  background-color: #4299e1; /* Active background color */
+  color: #fff;
+}
+
+.oh-sidebar__menu-link.oh-sidebar__menu-link--active:hover {
+  background-color: #3182ce; /* Darker blue on hover for active item */
+}
+
+
+.oh-sidebar.collapsed .oh-sidebar__menu-link {
+  justify-content: center;
+  padding: 0.75rem 0.5rem; /* Adjust padding for icons only */
+}
+
+.oh-sidebar.collapsed .oh-sidebar__menu-link span {
+  display: none; /* Hide text when collapsed */
+}
+
+.oh-sidebar__menu-icon {
+  flex-shrink: 0; /* Prevent icon from shrinking */
+  display: flex; /* To center SVG if it's smaller than parent */
+  align-items: center;
+  justify-content: center;
+  width: 24px; /* Fixed width for icons */
+  height: 24px; /* Fixed height for icons */
+}
+
+.oh-sidebar__menu-icon svg {
+  width: 20px; /* Adjust SVG size */
+  height: 20px;
+  color: #a0aec0; /* Default icon color */
+}
+
+.oh-sidebar__menu-link:hover .oh-sidebar__menu-icon svg,
+.oh-sidebar__menu-link--active .oh-sidebar__menu-icon svg {
+  color: #fff; /* White icon on hover/active */
+}
+
+.oh-sidebar__menu-icon img {
+  filter: brightness(0) invert(1); /* To make SVG/PNG icons white */
+}
+
+
+/* Submenu Styles */
+.oh-sidebar__submenu {
+  padding-left: 0.5rem; /* Indent submenus */
+  overflow: hidden; /* For transition effect */
+  max-height: 0; /* Initially hidden for transition */
+  transition: max-height 0.3s ease-out; /* Smooth slide transition */
+}
+
+.oh-sidebar__submenu[style*="display: block"] {
+    max-height: 500px; /* A value larger than the max possible height of the submenu */
+}
+
+.oh-sidebar.collapsed .oh-sidebar__submenu {
+  display: none !important; /* Hide submenus completely when sidebar is collapsed */
+}
+
+.oh-sidebar__submenu-items {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.oh-sidebar__submenu-item {
+  margin-bottom: 0.25rem;
+}
+
+
+
+.oh-sidebar__submenu-link {
+  display: block;
+  padding: 0.5rem 1.5rem;
+  color: #a0aec0;
+  text-decoration: none;
+  font-size: 0.85rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.oh-sidebar__submenu-link:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: #fff;
+}
+
+/* Active state for submenu links */
+.oh-sidebar__submenu-link.oh-sidebar__submenu-link--active {
+  background-color: rgba(255, 255, 255, 0.08); /* A subtle highlight */
+  color: #fff;
+}
+
+/* Specific styling from original HTML */
+
+/* Ensure default list style isn't adding anything extra */
+.oh-sidebar__submenu-items li {
+    list-style: none; /* Remove default bullet points */
+    display: flex;
+    align-items: center;
+}
+
+
+/* Media Queries for Collapsed Sidebar */
+@media (max-width: 768px) {
+    /* If you want the sidebar to automatically collapse on small screens,
+       you'd manage isCollapsed state in App.tsx or use global CSS classes
+       based on screen size. For now, assume it's manually toggled. */
+}
