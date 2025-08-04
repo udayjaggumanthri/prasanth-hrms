@@ -12,6 +12,13 @@ import DocumentRequestModal from './modals/DocumentRequestModal';
 
 export interface QuickAccessProps {}
 
+interface QuickAction {
+  id: string;
+  label: string;
+  icon: string;
+  onClick: (e: React.MouseEvent) => void;
+}
+
 const QuickAccess: React.FC<QuickAccessProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);

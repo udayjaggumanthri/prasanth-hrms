@@ -18,6 +18,13 @@ import OrganizationChart from '../pages/Employee/OrganizationChart/OrganizationC
 import RecruitmentDashboard from '../pages/Recruitment/RecruitmentDashboard';
 import Candidates from '../pages/Recruitment/Candidates';
 import JobPostings from '../pages/Recruitment/JobPostings';
+import RecruitmentPipeline from '../pages/Recruitment/RecruitmentPipeline';
+import RecruitmentSurvey from '../pages/Recruitment/RecruitmentSurvey';
+import Interview from '../pages/Recruitment/Interview';
+import Recruitment from '../pages/Recruitment/Recruitment';
+import OpenJobs from '../pages/Recruitment/OpenJobs';
+import Stages from '../pages/Recruitment/Stages';
+import SkillZone from '../pages/Recruitment/SkillZone';
 import AttendanceRecords from '../pages/Attendance/AttendanceRecords';
 import OnboardingPlans from '../pages/Onboarding/OnboardingPlans';
 import EmployeeDashboard from '../pages/Employee/Dashboard/EmployeeDashboard';
@@ -32,7 +39,6 @@ import ProjectManagement from '../pages/Project/ProjectManagement';
 import OffboardingProcess from '../pages/Offboarding/OffboardingProcess';
 import SystemSettings from '../pages/Configuration/SystemSettings';
 import ProtectedRoute from './ProtectedRoute';
-import { useAuthContext } from '../contexts/AuthContext';
 
 import { CompanyInfo, UserPermissions, MenuItem } from '../utils/mockSidebarData';
 
@@ -43,7 +49,6 @@ interface AppRoutesProps {
 }
 
 const AppRoutes: React.FC<AppRoutesProps> = ({ companyInfo, userPermissions, menuItems }) => {
-  const { isAuthenticated } = useAuthContext();
   const location = useLocation();
 
   // Simple mapping from path to title for demonstration
@@ -66,6 +71,13 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ companyInfo, userPermissions, men
       case '/recruitment/dashboard': return 'Recruitment Dashboard';
       case '/recruitment/job-postings': return 'Job Postings';
       case '/recruitment/candidates': return 'Candidates';
+      case '/recruitment/pipeline': return 'Recruitment Pipeline';
+      case '/recruitment/survey': return 'Recruitment Survey';
+      case '/recruitment/interview': return 'Interview';
+      case '/recruitment/recruitment': return 'Recruitment';
+      case '/recruitment/open-jobs': return 'Open Jobs';
+      case '/recruitment/stages': return 'Stages';
+      case '/recruitment/skill-zone': return 'Skill Zone';
       case '/recruitments/job-postings': return 'Job Postings';
       case '/recruitments/candidates': return 'Candidates';
       case '/attendance/records': return 'Attendance Records';
@@ -193,6 +205,41 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ companyInfo, userPermissions, men
       <Route path="/recruitment/candidates" element={
         <ProtectedRoute>
           <Candidates />
+        </ProtectedRoute>
+      } />
+      <Route path="/recruitment/pipeline" element={
+        <ProtectedRoute>
+          <RecruitmentPipeline />
+        </ProtectedRoute>
+      } />
+      <Route path="/recruitment/survey" element={
+        <ProtectedRoute>
+          <RecruitmentSurvey />
+        </ProtectedRoute>
+      } />
+      <Route path="/recruitment/interview" element={
+        <ProtectedRoute>
+          <Interview />
+        </ProtectedRoute>
+      } />
+      <Route path="/recruitment/recruitment" element={
+        <ProtectedRoute>
+          <Recruitment />
+        </ProtectedRoute>
+      } />
+      <Route path="/recruitment/open-jobs" element={
+        <ProtectedRoute>
+          <OpenJobs />
+        </ProtectedRoute>
+      } />
+      <Route path="/recruitment/stages" element={
+        <ProtectedRoute>
+          <Stages />
+        </ProtectedRoute>
+      } />
+      <Route path="/recruitment/skill-zone" element={
+        <ProtectedRoute>
+          <SkillZone />
         </ProtectedRoute>
       } />
 
