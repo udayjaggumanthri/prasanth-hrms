@@ -20,6 +20,18 @@ interface DocumentRequest {
   completedDate?: string;
   remarks?: string;
   urgency: 'low' | 'medium' | 'high';
+  title?: string;
+  format?: string;
+  maxSize?: number;
+  description?: string;
+}
+
+interface CreateRequestForm {
+  title: string;
+  employee: string;
+  format: string;
+  maxSize: string;
+  description: string;
 }
 
 const mockDocumentRequests: DocumentRequest[] = [
@@ -98,6 +110,104 @@ const DocumentRequests: React.FC = () => {
   const [urgencyFilter, setUrgencyFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [requests, setRequests] = useState<DocumentRequest[]>(mockDocumentRequests);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error' | 'info';
+    message: string;
+  } | null>(null);
+  
+  const [createForm, setCreateForm] = useState<CreateRequestForm>({
+    title: '',
+    employee: '',
+    format: '',
+    maxSize: '',
+    description: ''
+  });
+
+  // Show notification
+  const showNotification = (type: 'success' | 'error' | 'info', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 4000);
+  };
+
+  // Handle form input changes
+  const handleInputChange = (field: keyof CreateRequestForm, value: string) => {
+    setCreateForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setCreateForm({
+      title: '',
+      employee: '',
+      format: '',
+      maxSize: '',
+      description: ''
+    });
+  };
+
+  // Generate next Request ID
+  const generateNextRequestId = () => {
+    const existingIds = requests.map(req => req.requestId);
+    const numericIds = existingIds
+      .filter(id => id.match(/^DOC\d+$/))
+      .map(id => parseInt(id.replace('DOC', '')))
+      .sort((a, b) => b - a);
+    
+    const nextNumber = numericIds.length > 0 ? numericIds[0] + 1 : 1;
+    return `DOC${nextNumber.toString().padStart(3, '0')}`;
+  };
+
+  // Handle create request
+  const handleCreateRequest = async () => {
+    // Validation
+    if (!createForm.title || !createForm.employee || !createForm.format) {
+      showNotification('error', 'Please fill in all required fields');
+      return;
+    }
+
+    // Max size validation
+    if (createForm.maxSize && (isNaN(Number(createForm.maxSize)) || Number(createForm.maxSize) <= 0)) {
+      showNotification('error', 'Please enter a valid max size');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      const newRequest: DocumentRequest = {
+        id: Date.now().toString(),
+        requestId: generateNextRequestId(),
+        employeeName: createForm.employee,
+        employeeId: 'EMP001', // This would come from employee selection
+        documentType: createForm.title,
+        purpose: createForm.description || 'General Request',
+        requestDate: new Date().toISOString().split('T')[0],
+        status: 'pending',
+        urgency: 'medium',
+        title: createForm.title,
+        format: createForm.format,
+        maxSize: createForm.maxSize ? Number(createForm.maxSize) : undefined,
+        description: createForm.description
+      };
+
+      setRequests(prev => [newRequest, ...prev]);
+      setShowCreateModal(false);
+      resetForm();
+      showNotification('success', `Document request "${createForm.title}" created successfully!`);
+    } catch (error) {
+      showNotification('error', 'Failed to create request. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Filter requests based on search and filters
   const filteredRequests = requests.filter(request => {
@@ -183,7 +293,10 @@ const DocumentRequests: React.FC = () => {
               </div>
             </div>
             <div className="oh-document-requests-actions">
-              <button className="oh-btn oh-btn--primary">
+              <button 
+                className="oh-btn oh-btn--primary"
+                onClick={() => setShowCreateModal(true)}
+              >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -423,6 +536,189 @@ const DocumentRequests: React.FC = () => {
         </div>
       </div>
       <QuickAccess />
+
+      {/* Notification */}
+      {notification && (
+        <div className={`oh-notification oh-notification-${notification.type}`}>
+          <div className="oh-notification-content">
+            <div className="oh-notification-icon">
+              {notification.type === 'success' && (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                </svg>
+              )}
+              {notification.type === 'error' && (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="15" y1="9" x2="9" y2="15"></line>
+                  <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+              )}
+              {notification.type === 'info' && (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              )}
+            </div>
+            <div className="oh-notification-message">{notification.message}</div>
+            <button 
+              className="oh-notification-close"
+              onClick={() => setNotification(null)}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Create Request Modal */}
+      {showCreateModal && (
+        <div className="oh-modal-overlay">
+          <div className="oh-create-request-modal">
+            <div className="oh-modal-header">
+              <h2>Create Document Request</h2>
+              <button 
+                className="oh-modal-close-btn"
+                onClick={() => {
+                  setShowCreateModal(false);
+                  resetForm();
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div className="oh-modal-body">
+              <div className="oh-form-section">
+                <h3 className="oh-section-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14,2 14,8 20,8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10,9 9,9 8,9"></polyline>
+                  </svg>
+                  Request Details
+                </h3>
+                <div className="oh-form-grid">
+                  <div className="oh-form-field">
+                    <label htmlFor="title">Title *</label>
+                    <input
+                      id="title"
+                      type="text"
+                      value={createForm.title}
+                      onChange={(e) => handleInputChange('title', e.target.value)}
+                      placeholder="Enter document title"
+                      className="oh-form-input"
+                      required
+                    />
+                  </div>
+                  <div className="oh-form-field">
+                    <label htmlFor="employee">Employee *</label>
+                    <select
+                      id="employee"
+                      value={createForm.employee}
+                      onChange={(e) => handleInputChange('employee', e.target.value)}
+                      className="oh-form-select"
+                      required
+                    >
+                      <option value="">Select employee</option>
+                      <option value="Prasanth Kathi">Prasanth Kathi</option>
+                      <option value="Sarah Wilson">Sarah Wilson</option>
+                      <option value="Mike Johnson">Mike Johnson</option>
+                      <option value="Anna Smith">Anna Smith</option>
+                      <option value="David Brown">David Brown</option>
+                    </select>
+                  </div>
+                  <div className="oh-form-field">
+                    <label htmlFor="format">Format *</label>
+                    <select
+                      id="format"
+                      value={createForm.format}
+                      onChange={(e) => handleInputChange('format', e.target.value)}
+                      className="oh-form-select"
+                      required
+                    >
+                      <option value="">Select format</option>
+                      <option value="PDF">PDF</option>
+                      <option value="Word Document">Word Document</option>
+                      <option value="Excel">Excel</option>
+                      <option value="PowerPoint">PowerPoint</option>
+                      <option value="Image">Image</option>
+                      <option value="Text">Text</option>
+                    </select>
+                  </div>
+                  <div className="oh-form-field">
+                    <label htmlFor="maxSize">Max Size (In MB)</label>
+                    <input
+                      id="maxSize"
+                      type="number"
+                      min="1"
+                      max="100"
+                      value={createForm.maxSize}
+                      onChange={(e) => handleInputChange('maxSize', e.target.value)}
+                      placeholder="Enter max file size"
+                      className="oh-form-input"
+                    />
+                  </div>
+                  <div className="oh-form-field oh-form-field-full">
+                    <label htmlFor="description">Description</label>
+                    <textarea
+                      id="description"
+                      value={createForm.description}
+                      onChange={(e) => handleInputChange('description', e.target.value)}
+                      placeholder="Enter request description or purpose"
+                      className="oh-form-textarea"
+                      rows={4}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="oh-modal-footer">
+              <button 
+                className="oh-btn oh-btn-secondary"
+                onClick={() => {
+                  setShowCreateModal(false);
+                  resetForm();
+                }}
+                disabled={isLoading}
+              >
+                Cancel
+              </button>
+              <button 
+                className="oh-btn oh-btn-primary oh-btn-create"
+                onClick={handleCreateRequest}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <div className="oh-loading-spinner"></div>
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 5v14m-7-7h14"></path>
+                    </svg>
+                    Create Request
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
