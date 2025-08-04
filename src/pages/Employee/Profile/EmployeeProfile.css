@@ -80,6 +80,316 @@
   height: 16px;
 }
 
+/* Inline Edit Actions */
+.oh-profile-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.oh-profile-edit-btn-small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.oh-profile-edit-btn-small:hover {
+  background: #e9ecef;
+  color: #495057;
+  border-color: #adb5bd;
+}
+
+.oh-profile-edit-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.oh-profile-save-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.oh-profile-save-btn:hover {
+  background: #218838;
+}
+
+.oh-profile-cancel-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.oh-profile-cancel-btn:hover {
+  background: #5a6268;
+}
+
+/* Form Controls */
+.oh-profile-input,
+.oh-profile-select,
+.oh-profile-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  background: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.oh-profile-input:focus,
+.oh-profile-select:focus,
+.oh-profile-textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.oh-profile-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* Global Edit Actions */
+.oh-profile-global-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.oh-profile-save-btn-large {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.oh-profile-save-btn-large:hover {
+  background: #218838;
+}
+
+.oh-profile-cancel-btn-large {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.oh-profile-cancel-btn-large:hover {
+  background: #5a6268;
+}
+
+/* Notification System */
+.oh-notification {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateX(120%);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.oh-notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.oh-notification-success {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+}
+
+.oh-notification-error {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+}
+
+.oh-notification-info {
+  background: #cce7ff;
+  border: 1px solid #b3d9ff;
+  color: #004085;
+}
+
+.oh-notification-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+}
+
+.oh-notification-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.oh-notification-message {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.oh-notification-close {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.oh-notification-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Edit Mode Animations */
+.oh-profile-card {
+  transition: all 0.3s ease;
+}
+
+.oh-profile-card.editing {
+  border-color: #007bff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.oh-profile-card.editing .oh-profile-card-header {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+}
+
+.oh-profile-card.editing .oh-profile-card-header h3 {
+  color: white;
+}
+
+.oh-profile-input,
+.oh-profile-select,
+.oh-profile-textarea {
+  transition: all 0.2s ease;
+}
+
+.oh-profile-input:focus,
+.oh-profile-select:focus,
+.oh-profile-textarea:focus {
+  transform: scale(1.02);
+}
+
+.oh-profile-field {
+  transition: all 0.2s ease;
+}
+
+.oh-profile-field.editing {
+  background: rgba(0, 123, 255, 0.02);
+  border-radius: 4px;
+  padding: 8px;
+  margin: -8px;
+}
+
+/* Button Hover Effects */
+.oh-profile-edit-btn,
+.oh-profile-save-btn-large,
+.oh-profile-cancel-btn-large,
+.oh-profile-edit-btn-small,
+.oh-profile-save-btn,
+.oh-profile-cancel-btn {
+  transition: all 0.2s ease;
+}
+
+.oh-profile-edit-btn:hover,
+.oh-profile-save-btn-large:hover,
+.oh-profile-cancel-btn-large:hover,
+.oh-profile-edit-btn-small:hover,
+.oh-profile-save-btn:hover,
+.oh-profile-cancel-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Loading Animation for Save Actions */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.oh-profile-card.saving {
+  animation: pulse 1s ease-in-out;
+}
+
+/* Success Animation */
+@keyframes success-bounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.oh-profile-card.success {
+  animation: success-bounce 0.5s ease-in-out;
+  border-color: #28a745;
+}
+
+/* Tab Animation when navigating */
+.oh-profile-tab {
+  transition: all 0.3s ease;
+}
+
+.oh-profile-tab.active {
+  transform: translateY(-2px);
+}
+
 .oh-profile-avatar {
   flex-shrink: 0;
 }
@@ -218,8 +528,25 @@
 /* Field Groups */
 .oh-profile-field-group {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* For cards with many fields, use a 3-column layout on larger screens */
+.oh-profile-card .oh-profile-field-group {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+@media (min-width: 1200px) {
+  .oh-profile-card .oh-profile-field-group {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .oh-profile-card .oh-profile-field-group {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Individual Fields */
@@ -675,6 +1002,18 @@
     width: 100%;
     justify-content: center;
   }
+
+  .oh-profile-global-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .oh-profile-save-btn-large,
+  .oh-profile-cancel-btn-large {
+    width: 100%;
+    justify-content: center;
+  }
   
   .oh-profile-cards-grid {
     grid-template-columns: 1fr;
@@ -696,6 +1035,14 @@
     min-width: 120px;
     font-size: 12px;
     padding: 10px 8px;
+  }
+
+  /* Mobile notification positioning */
+  .oh-notification {
+    top: 60px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
   }
 
   .oh-profile-attendance-item,

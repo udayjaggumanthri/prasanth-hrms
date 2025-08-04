@@ -16,6 +16,16 @@ const mockEmployee = {
   dateOfBirth: '1990-01-15',
   gender: 'Male',
   address: '123 Main St, City, State 12345',
+  country: 'United States',
+  state: 'California',
+  city: 'San Francisco',
+  qualification: 'Bachelor of Computer Science',
+  experience: '5 years',
+  maritalStatus: 'Married',
+  children: '2',
+  emergencyContact: '+1234567891',
+  emergencyContactName: 'Jane Doe',
+  emergencyContactRelation: 'Spouse',
   department: 'Engineering',
   position: 'Senior Developer',
   manager: 'Jane Smith',
@@ -38,7 +48,132 @@ const mockBankInfo = {
 
 const EmployeeProfile: React.FC = () => {
   const [activeTab, setActiveTab] = useState('about');
+  const [isEditingPersonal, setIsEditingPersonal] = useState(false);
+  const [isEditingWork, setIsEditingWork] = useState(false);
+  const [isEditingBank, setIsEditingBank] = useState(false);
+  const [isEditingContract, setIsEditingContract] = useState(false);
+  const [personalFormData, setPersonalFormData] = useState({...mockEmployee});
+  const [bankFormData, setBankFormData] = useState({...mockBankInfo});
+  const [notification, setNotification] = useState<{type: 'success' | 'error' | 'info', message: string} | null>(null);
+  const [isGlobalEdit, setIsGlobalEdit] = useState(false);
   const { isCollapsed } = useSidebar();
+
+  // Show notification with auto-hide
+  const showNotification = (type: 'success' | 'error' | 'info', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => {
+      setNotification(null);
+    }, 4000); // Hide after 4 seconds
+  };
+
+  const handlePersonalSave = () => {
+    // Here you would typically make an API call to save the data
+    console.log('Saving personal data:', personalFormData);
+    setIsEditingPersonal(false);
+    showNotification('success', 'Personal information updated successfully!');
+  };
+
+  const handlePersonalCancel = () => {
+    setPersonalFormData({...mockEmployee});
+    setIsEditingPersonal(false);
+    showNotification('info', 'Changes discarded');
+  };
+
+  const handleWorkSave = () => {
+    console.log('Saving work data:', personalFormData);
+    setIsEditingWork(false);
+    showNotification('success', 'Work information updated successfully!');
+  };
+
+  const handleWorkCancel = () => {
+    setPersonalFormData({...mockEmployee});
+    setIsEditingWork(false);
+    showNotification('info', 'Changes discarded');
+  };
+
+  const handleBankSave = () => {
+    // Here you would typically make an API call to save the data
+    console.log('Saving bank data:', bankFormData);
+    setIsEditingBank(false);
+    showNotification('success', 'Bank information updated successfully!');
+  };
+
+  const handleBankCancel = () => {
+    setBankFormData({...mockBankInfo});
+    setIsEditingBank(false);
+    showNotification('info', 'Changes discarded');
+  };
+
+  const handleContractSave = () => {
+    console.log('Saving contract data:', personalFormData);
+    setIsEditingContract(false);
+    showNotification('success', 'Contract details updated successfully!');
+  };
+
+  const handleContractCancel = () => {
+    setPersonalFormData({...mockEmployee});
+    setIsEditingContract(false);
+    showNotification('info', 'Changes discarded');
+  };
+
+  // Smart navigation for edit functionality
+  const handleTabEdit = (targetTab: string) => {
+    if (activeTab !== targetTab) {
+      setActiveTab(targetTab);
+      showNotification('info', `Navigated to ${targetTab} section for editing`);
+    }
+    // Enable edit mode after navigation
+    setTimeout(() => {
+      switch (targetTab) {
+        case 'about':
+          setIsEditingPersonal(true);
+          setIsEditingWork(true);
+          setIsEditingBank(true);
+          setIsEditingContract(true);
+          break;
+        // Add more cases for other tabs as needed
+      }
+    }, 300);
+  };
+
+  // Global edit functionality
+  const handleGlobalEdit = () => {
+    setIsGlobalEdit(true);
+    // Navigate to 'about' tab if not already there
+    if (activeTab !== 'about') {
+      setActiveTab('about');
+      showNotification('info', 'Navigated to profile section for editing');
+    }
+    // Enable edit mode for all sections
+    setTimeout(() => {
+      setIsEditingPersonal(true);
+      setIsEditingWork(true);
+      setIsEditingBank(true);
+      setIsEditingContract(true);
+    }, 300); // Small delay for smooth transition
+  };
+
+  const handleGlobalSave = () => {
+    // Save all sections
+    handlePersonalSave();
+    handleWorkSave();
+    handleBankSave();
+    handleContractSave();
+    setIsGlobalEdit(false);
+    showNotification('success', 'All profile information updated successfully!');
+  };
+
+  const handleGlobalCancel = () => {
+    // Cancel all sections
+    setPersonalFormData({...mockEmployee});
+    setBankFormData({...mockBankInfo});
+    setIsEditingPersonal(false);
+    setIsEditingWork(false);
+    setIsEditingBank(false);
+    setIsEditingContract(false);
+    setIsGlobalEdit(false);
+    showNotification('info', 'All changes discarded');
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -47,136 +182,695 @@ const EmployeeProfile: React.FC = () => {
           <div className="oh-profile-content">
             <div className="oh-profile-cards-grid">
               {/* Personal Information Card */}
-              <div className="oh-profile-card">
+              <div className={`oh-profile-card ${isEditingPersonal ? 'editing' : ''}`}>
                 <div className="oh-profile-card-header">
                   <h3>Personal Information</h3>
+                  <div className="oh-profile-card-actions">
+                    {!isEditingPersonal ? (
+                      <button 
+                        className="oh-profile-edit-btn-small"
+                        onClick={() => setIsEditingPersonal(true)}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                          <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Edit
+                      </button>
+                    ) : (
+                      <div className="oh-profile-edit-actions">
+                        <button 
+                          className="oh-profile-save-btn"
+                          onClick={handlePersonalSave}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="20,6 9,17 4,12"></polyline>
+                          </svg>
+                          Save
+                        </button>
+                        <button 
+                          className="oh-profile-cancel-btn"
+                          onClick={handlePersonalCancel}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="oh-profile-card-body">
                   <div className="oh-profile-field-group">
+                    {/* Basic Information */}
                     <div className="oh-profile-field">
                       <label>Employee ID</label>
-                      <span>{mockEmployee.employeeId}</span>
+                      <span>{personalFormData.employeeId}</span>
                     </div>
                     <div className="oh-profile-field">
                       <label>First Name</label>
-                      <span>{mockEmployee.firstName}</span>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.firstName}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={personalFormData.firstName}
+                          onChange={(e) => setPersonalFormData({...personalFormData, firstName: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Last Name</label>
-                      <span>{mockEmployee.lastName}</span>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.lastName}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={personalFormData.lastName}
+                          onChange={(e) => setPersonalFormData({...personalFormData, lastName: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
+                    
+                    {/* Contact Information */}
                     <div className="oh-profile-field">
                       <label>Email</label>
-                      <span>{mockEmployee.email}</span>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.email}</span>
+                      ) : (
+                        <input
+                          type="email"
+                          value={personalFormData.email}
+                          onChange={(e) => setPersonalFormData({...personalFormData, email: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Phone</label>
-                      <span>{mockEmployee.phone}</span>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.phone}</span>
+                      ) : (
+                        <input
+                          type="tel"
+                          value={personalFormData.phone}
+                          onChange={(e) => setPersonalFormData({...personalFormData, phone: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
+                    
+                    {/* Personal Details */}
                     <div className="oh-profile-field">
                       <label>Date of Birth</label>
-                      <span>{mockEmployee.dateOfBirth}</span>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.dateOfBirth}</span>
+                      ) : (
+                        <input
+                          type="date"
+                          value={personalFormData.dateOfBirth}
+                          onChange={(e) => setPersonalFormData({...personalFormData, dateOfBirth: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Gender</label>
-                      <span>{mockEmployee.gender}</span>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.gender}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.gender}
+                          onChange={(e) => setPersonalFormData({...personalFormData, gender: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
                     </div>
                     <div className="oh-profile-field">
+                      <label>Marital Status</label>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.maritalStatus}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.maritalStatus}
+                          onChange={(e) => setPersonalFormData({...personalFormData, maritalStatus: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="Single">Single</option>
+                          <option value="Married">Married</option>
+                          <option value="Divorced">Divorced</option>
+                          <option value="Widowed">Widowed</option>
+                          <option value="Separated">Separated</option>
+                        </select>
+                      )}
+                    </div>
+                    <div className="oh-profile-field">
+                      <label>Children</label>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.children}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.children}
+                          onChange={(e) => setPersonalFormData({...personalFormData, children: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="0">0</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5+">5+</option>
+                        </select>
+                      )}
+                    </div>
+                    
+                    {/* Address Information */}
+                    <div className="oh-profile-field">
                       <label>Address</label>
-                      <span>{mockEmployee.address}</span>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.address}</span>
+                      ) : (
+                        <textarea
+                          value={personalFormData.address}
+                          onChange={(e) => setPersonalFormData({...personalFormData, address: e.target.value})}
+                          className="oh-profile-textarea"
+                          rows={2}
+                        />
+                      )}
+                    </div>
+                    <div className="oh-profile-field">
+                      <label>City</label>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.city}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={personalFormData.city}
+                          onChange={(e) => setPersonalFormData({...personalFormData, city: e.target.value})}
+                          className="oh-profile-input"
+                          placeholder="Enter city"
+                        />
+                      )}
+                    </div>
+                    <div className="oh-profile-field">
+                      <label>State</label>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.state}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={personalFormData.state}
+                          onChange={(e) => setPersonalFormData({...personalFormData, state: e.target.value})}
+                          className="oh-profile-input"
+                          placeholder="Enter state/province"
+                        />
+                      )}
+                    </div>
+                    <div className="oh-profile-field">
+                      <label>Country</label>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.country}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.country}
+                          onChange={(e) => setPersonalFormData({...personalFormData, country: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="United States">United States</option>
+                          <option value="Canada">Canada</option>
+                          <option value="United Kingdom">United Kingdom</option>
+                          <option value="Australia">Australia</option>
+                          <option value="India">India</option>
+                          <option value="Germany">Germany</option>
+                          <option value="France">France</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
+                    </div>
+                    
+                    {/* Professional Information */}
+                    <div className="oh-profile-field">
+                      <label>Qualification</label>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.qualification}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.qualification}
+                          onChange={(e) => setPersonalFormData({...personalFormData, qualification: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="">Select Qualification</option>
+                          <option value="High School">High School</option>
+                          <option value="Associate Degree">Associate Degree</option>
+                          <option value="Bachelor of Arts">Bachelor of Arts</option>
+                          <option value="Bachelor of Science">Bachelor of Science</option>
+                          <option value="Bachelor of Computer Science">Bachelor of Computer Science</option>
+                          <option value="Bachelor of Engineering">Bachelor of Engineering</option>
+                          <option value="Master of Arts">Master of Arts</option>
+                          <option value="Master of Science">Master of Science</option>
+                          <option value="Master of Business Administration">Master of Business Administration</option>
+                          <option value="Master of Computer Science">Master of Computer Science</option>
+                          <option value="Doctor of Philosophy">Doctor of Philosophy</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
+                    </div>
+                    <div className="oh-profile-field">
+                      <label>Experience</label>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.experience}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.experience}
+                          onChange={(e) => setPersonalFormData({...personalFormData, experience: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="">Select Experience</option>
+                          <option value="Fresh Graduate">Fresh Graduate</option>
+                          <option value="1 year">1 year</option>
+                          <option value="2 years">2 years</option>
+                          <option value="3 years">3 years</option>
+                          <option value="4 years">4 years</option>
+                          <option value="5 years">5 years</option>
+                          <option value="6-10 years">6-10 years</option>
+                          <option value="11-15 years">11-15 years</option>
+                          <option value="16-20 years">16-20 years</option>
+                          <option value="20+ years">20+ years</option>
+                        </select>
+                      )}
+                    </div>
+                    
+                    {/* Emergency Contact Information */}
+                    <div className="oh-profile-field">
+                      <label>Emergency Contact Name</label>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.emergencyContactName}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={personalFormData.emergencyContactName}
+                          onChange={(e) => setPersonalFormData({...personalFormData, emergencyContactName: e.target.value})}
+                          className="oh-profile-input"
+                          placeholder="Enter emergency contact name"
+                        />
+                      )}
+                    </div>
+                    <div className="oh-profile-field">
+                      <label>Emergency Contact</label>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.emergencyContact}</span>
+                      ) : (
+                        <input
+                          type="tel"
+                          value={personalFormData.emergencyContact}
+                          onChange={(e) => setPersonalFormData({...personalFormData, emergencyContact: e.target.value})}
+                          className="oh-profile-input"
+                          placeholder="Enter emergency contact number"
+                        />
+                      )}
+                    </div>
+                    <div className="oh-profile-field">
+                      <label>Emergency Contact Relation</label>
+                      {!isEditingPersonal ? (
+                        <span>{personalFormData.emergencyContactRelation}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.emergencyContactRelation}
+                          onChange={(e) => setPersonalFormData({...personalFormData, emergencyContactRelation: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="">Select Relation</option>
+                          <option value="Spouse">Spouse</option>
+                          <option value="Parent">Parent</option>
+                          <option value="Sibling">Sibling</option>
+                          <option value="Child">Child</option>
+                          <option value="Friend">Friend</option>
+                          <option value="Relative">Relative</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Work Information Card */}
-              <div className="oh-profile-card">
+              <div className={`oh-profile-card ${isEditingWork ? 'editing' : ''}`}>
                 <div className="oh-profile-card-header">
                   <h3>Work Information</h3>
+                  <div className="oh-profile-card-actions">
+                    {!isEditingWork ? (
+                      <button 
+                        className="oh-profile-edit-btn-small"
+                        onClick={() => setIsEditingWork(true)}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                          <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Edit
+                      </button>
+                    ) : (
+                      <div className="oh-profile-edit-actions">
+                        <button 
+                          className="oh-profile-save-btn"
+                          onClick={handleWorkSave}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="20,6 9,17 4,12"></polyline>
+                          </svg>
+                          Save
+                        </button>
+                        <button 
+                          className="oh-profile-cancel-btn"
+                          onClick={handleWorkCancel}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="oh-profile-card-body">
                   <div className="oh-profile-field-group">
                     <div className="oh-profile-field">
                       <label>Department</label>
-                      <span>{mockEmployee.department}</span>
+                      {!isEditingWork ? (
+                        <span>{personalFormData.department}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.department}
+                          onChange={(e) => setPersonalFormData({...personalFormData, department: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="Engineering">Engineering</option>
+                          <option value="Human Resources">Human Resources</option>
+                          <option value="Finance">Finance</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="Sales">Sales</option>
+                        </select>
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Position</label>
-                      <span>{mockEmployee.position}</span>
+                      {!isEditingWork ? (
+                        <span>{personalFormData.position}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={personalFormData.position}
+                          onChange={(e) => setPersonalFormData({...personalFormData, position: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Manager</label>
-                      <span>{mockEmployee.manager}</span>
+                      {!isEditingWork ? (
+                        <span>{personalFormData.manager}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={personalFormData.manager}
+                          onChange={(e) => setPersonalFormData({...personalFormData, manager: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Date of Joining</label>
-                      <span>{mockEmployee.dateOfJoining}</span>
+                      {!isEditingWork ? (
+                        <span>{personalFormData.dateOfJoining}</span>
+                      ) : (
+                        <input
+                          type="date"
+                          value={personalFormData.dateOfJoining}
+                          onChange={(e) => setPersonalFormData({...personalFormData, dateOfJoining: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Employment Type</label>
-                      <span>{mockEmployee.employmentType}</span>
+                      {!isEditingWork ? (
+                        <span>{personalFormData.employmentType}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.employmentType}
+                          onChange={(e) => setPersonalFormData({...personalFormData, employmentType: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="Full-time">Full-time</option>
+                          <option value="Part-time">Part-time</option>
+                          <option value="Contract">Contract</option>
+                          <option value="Temporary">Temporary</option>
+                        </select>
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Work Location</label>
-                      <span>{mockEmployee.workLocation}</span>
+                      {!isEditingWork ? (
+                        <span>{personalFormData.workLocation}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.workLocation}
+                          onChange={(e) => setPersonalFormData({...personalFormData, workLocation: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="Head Office">Head Office</option>
+                          <option value="Branch Office">Branch Office</option>
+                          <option value="Remote">Remote</option>
+                          <option value="Hybrid">Hybrid</option>
+                        </select>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Bank Information Card */}
-              <div className="oh-profile-card">
+              <div className={`oh-profile-card ${isEditingBank ? 'editing' : ''}`}>
                 <div className="oh-profile-card-header">
                   <h3>Bank Information</h3>
+                  <div className="oh-profile-card-actions">
+                    {!isEditingBank ? (
+                      <button 
+                        className="oh-profile-edit-btn-small"
+                        onClick={() => setIsEditingBank(true)}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                          <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Edit
+                      </button>
+                    ) : (
+                      <div className="oh-profile-edit-actions">
+                        <button 
+                          className="oh-profile-save-btn"
+                          onClick={handleBankSave}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="20,6 9,17 4,12"></polyline>
+                          </svg>
+                          Save
+                        </button>
+                        <button 
+                          className="oh-profile-cancel-btn"
+                          onClick={handleBankCancel}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="oh-profile-card-body">
                   <div className="oh-profile-field-group">
                     <div className="oh-profile-field">
                       <label>Bank Name</label>
-                      <span>{mockBankInfo.bankName}</span>
+                      {!isEditingBank ? (
+                        <span>{bankFormData.bankName}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={bankFormData.bankName}
+                          onChange={(e) => setBankFormData({...bankFormData, bankName: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Account Number</label>
-                      <span>{mockBankInfo.accountNumber}</span>
+                      {!isEditingBank ? (
+                        <span>{bankFormData.accountNumber}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={bankFormData.accountNumber}
+                          onChange={(e) => setBankFormData({...bankFormData, accountNumber: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Routing Number</label>
-                      <span>{mockBankInfo.routingNumber}</span>
+                      {!isEditingBank ? (
+                        <span>{bankFormData.routingNumber}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={bankFormData.routingNumber}
+                          onChange={(e) => setBankFormData({...bankFormData, routingNumber: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Account Type</label>
-                      <span>{mockBankInfo.accountType}</span>
+                      {!isEditingBank ? (
+                        <span>{bankFormData.accountType}</span>
+                      ) : (
+                        <select
+                          value={bankFormData.accountType}
+                          onChange={(e) => setBankFormData({...bankFormData, accountType: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="Checking">Checking</option>
+                          <option value="Savings">Savings</option>
+                        </select>
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Branch</label>
-                      <span>{mockBankInfo.branch}</span>
+                      {!isEditingBank ? (
+                        <span>{bankFormData.branch}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={bankFormData.branch}
+                          onChange={(e) => setBankFormData({...bankFormData, branch: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Contract Details Card */}
-              <div className="oh-profile-card">
+              <div className={`oh-profile-card ${isEditingContract ? 'editing' : ''}`}>
                 <div className="oh-profile-card-header">
                   <h3>Contract Details</h3>
+                  <div className="oh-profile-card-actions">
+                    {!isEditingContract ? (
+                      <button 
+                        className="oh-profile-edit-btn-small"
+                        onClick={() => setIsEditingContract(true)}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                          <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Edit
+                      </button>
+                    ) : (
+                      <div className="oh-profile-edit-actions">
+                        <button 
+                          className="oh-profile-save-btn"
+                          onClick={handleContractSave}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="20,6 9,17 4,12"></polyline>
+                          </svg>
+                          Save
+                        </button>
+                        <button 
+                          className="oh-profile-cancel-btn"
+                          onClick={handleContractCancel}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="oh-profile-card-body">
                   <div className="oh-profile-field-group">
                     <div className="oh-profile-field">
                       <label>Salary</label>
-                      <span>{mockEmployee.salary}</span>
+                      {!isEditingContract ? (
+                        <span>{personalFormData.salary}</span>
+                      ) : (
+                        <input
+                          type="text"
+                          value={personalFormData.salary}
+                          onChange={(e) => setPersonalFormData({...personalFormData, salary: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Contract Start Date</label>
-                      <span>{mockEmployee.contractStartDate}</span>
+                      {!isEditingContract ? (
+                        <span>{personalFormData.contractStartDate}</span>
+                      ) : (
+                        <input
+                          type="date"
+                          value={personalFormData.contractStartDate}
+                          onChange={(e) => setPersonalFormData({...personalFormData, contractStartDate: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Contract End Date</label>
-                      <span>{mockEmployee.contractEndDate}</span>
+                      {!isEditingContract ? (
+                        <span>{personalFormData.contractEndDate}</span>
+                      ) : (
+                        <input
+                          type="date"
+                          value={personalFormData.contractEndDate}
+                          onChange={(e) => setPersonalFormData({...personalFormData, contractEndDate: e.target.value})}
+                          className="oh-profile-input"
+                        />
+                      )}
                     </div>
                     <div className="oh-profile-field">
                       <label>Probation Period</label>
-                      <span>{mockEmployee.probationPeriod}</span>
+                      {!isEditingContract ? (
+                        <span>{personalFormData.probationPeriod}</span>
+                      ) : (
+                        <select
+                          value={personalFormData.probationPeriod}
+                          onChange={(e) => setPersonalFormData({...personalFormData, probationPeriod: e.target.value})}
+                          className="oh-profile-select"
+                        >
+                          <option value="3 months">3 months</option>
+                          <option value="6 months">6 months</option>
+                          <option value="12 months">12 months</option>
+                        </select>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -731,6 +1425,45 @@ const EmployeeProfile: React.FC = () => {
       <Sidebar />
       <div className={`oh-main-content ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
         <Navbar pageTitle="Employee Profile" />
+        
+        {/* Notification Component */}
+        {notification && (
+          <div className={`oh-notification oh-notification-${notification.type} ${notification ? 'show' : ''}`}>
+            <div className="oh-notification-content">
+              <div className="oh-notification-icon">
+                {notification.type === 'success' && (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20,6 9,17 4,12"></polyline>
+                  </svg>
+                )}
+                {notification.type === 'error' && (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                )}
+                {notification.type === 'info' && (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                )}
+              </div>
+              <span className="oh-notification-message">{notification.message}</span>
+              <button 
+                className="oh-notification-close"
+                onClick={() => setNotification(null)}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
+        
         <div className="oh-profile-container">
           <div className="oh-profile-header">
             <div className="oh-profile-header-info">
@@ -745,14 +1478,42 @@ const EmployeeProfile: React.FC = () => {
                 <p>{mockEmployee.position} • {mockEmployee.department}</p>
                 <p>{mockEmployee.email}</p>
               </div>
+              {/* Rest of the component remains the same */}
               <div className="oh-profile-actions">
-                <button className="oh-profile-edit-btn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                  </svg>
-                  Edit
-                </button>
+                {!isGlobalEdit ? (
+                  <button 
+                    className="oh-profile-edit-btn"
+                    onClick={handleGlobalEdit}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Edit Profile
+                  </button>
+                ) : (
+                  <div className="oh-profile-global-actions">
+                    <button 
+                      className="oh-profile-save-btn-large"
+                      onClick={handleGlobalSave}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="20,6 9,17 4,12"></polyline>
+                      </svg>
+                      Save All Changes
+                    </button>
+                    <button 
+                      className="oh-profile-cancel-btn-large"
+                      onClick={handleGlobalCancel}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                      Cancel All
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
