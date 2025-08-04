@@ -43,11 +43,87 @@ interface Assignment {
   assignedDate: string;
 }
 
+interface CreateRotatingWorkTypeAssignForm {
+  employee: string;
+  workTypePattern: string;
+  startDate: string;
+  endDate: string;
+  rotationPeriod: string;
+  description: string;
+}
+
 const RotatingWorkTypeAssign: React.FC = () => {
   const [viewMode, setViewMode] = useState<'assignments' | 'patterns'>('assignments');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [departmentFilter, setDepartmentFilter] = useState<string>('all');
+  const { isCollapsed } = useSidebar();
+
+  // Create modal state
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error' | 'warning';
+    message: string;
+  } | null>(null);
+
+  const [createForm, setCreateForm] = useState<CreateRotatingWorkTypeAssignForm>({
+    employee: '',
+    workTypePattern: '',
+    startDate: '',
+    endDate: '',
+    rotationPeriod: '',
+    description: ''
+  });
+
+  // Notification system
+  const showNotification = (type: 'success' | 'error' | 'warning', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 5000);
+  };
+
+  // Form handlers
+  const handleInputChange = (field: keyof CreateRotatingWorkTypeAssignForm, value: string) => {
+    setCreateForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setCreateForm({
+      employee: '',
+      workTypePattern: '',
+      startDate: '',
+      endDate: '',
+      rotationPeriod: '',
+      description: ''
+    });
+  };
+
+  // Handle create rotating work type assignment
+  const handleCreateRotatingWorkTypeAssign = async () => {
+    // Validate required fields
+    if (!createForm.employee || !createForm.workTypePattern || !createForm.startDate || !createForm.description) {
+      showNotification('error', 'Please fill in all required fields');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      resetForm();
+      setShowCreateModal(false);
+      setIsLoading(false);
+      showNotification('success', 'Rotating work type assignment created successfully!');
+    } catch (error) {
+      setIsLoading(false);
+      showNotification('error', 'Failed to create rotating work type assignment. Please try again.');
+    }
+  };
   const { isCollapsed } = useSidebar();
 
   // Mock data for work types
@@ -243,7 +319,10 @@ const RotatingWorkTypeAssign: React.FC = () => {
                 <p className="oh-page-subtitle">Manage rotating work type assignments and patterns</p>
               </div>
               <div className="oh-page-header__actions">
-                <button className="oh-btn oh-btn--primary">
+                <button 
+                  className="oh-btn-create-main"
+                  onClick={() => setShowCreateModal(true)}
+                >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -555,6 +634,151 @@ const RotatingWorkTypeAssign: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Notification */}
+      {notification && (
+        <div className={`oh-notification oh-notification--${notification.type}`}>
+          <div className="oh-notification__content">
+            <span className="oh-notification__message">{notification.message}</span>
+            <button 
+              className="oh-notification__close"
+              onClick={() => setNotification(null)}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Create Rotating Work Type Assignment Modal */}
+      {showCreateModal && (
+        <div className="oh-modal-overlay" onClick={() => setShowCreateModal(false)}>
+          <div className="oh-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="oh-modal-header">
+              <h2>Assign Rotating Work Type</h2>
+              <button 
+                className="oh-modal-close"
+                onClick={() => setShowCreateModal(false)}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="oh-modal-body">
+              <form className="oh-create-form">
+                <div className="oh-form-row">
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">Employee *</label>
+                    <select 
+                      className="oh-form-select"
+                      value={createForm.employee}
+                      onChange={(e) => handleInputChange('employee', e.target.value)}
+                    >
+                      <option value="">Select Employee</option>
+                      <option value="john-doe">John Doe</option>
+                      <option value="jane-smith">Jane Smith</option>
+                      <option value="mike-johnson">Mike Johnson</option>
+                      <option value="sarah-wilson">Sarah Wilson</option>
+                      <option value="david-brown">David Brown</option>
+                      <option value="lisa-garcia">Lisa Garcia</option>
+                    </select>
+                  </div>
+                  
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">Work Type Pattern *</label>
+                    <select 
+                      className="oh-form-select"
+                      value={createForm.workTypePattern}
+                      onChange={(e) => handleInputChange('workTypePattern', e.target.value)}
+                    >
+                      <option value="">Select Work Type Pattern</option>
+                      <option value="remote-office-hybrid">Remote-Office-Hybrid</option>
+                      <option value="full-part-contract">Full-Part-Contract</option>
+                      <option value="project-maintenance-support">Project-Maintenance-Support</option>
+                      <option value="creative-analytical-operational">Creative-Analytical-Operational</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="oh-form-row">
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">Start Date *</label>
+                    <input 
+                      type="date"
+                      className="oh-form-input"
+                      value={createForm.startDate}
+                      onChange={(e) => handleInputChange('startDate', e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">End Date</label>
+                    <input 
+                      type="date"
+                      className="oh-form-input"
+                      value={createForm.endDate}
+                      onChange={(e) => handleInputChange('endDate', e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="oh-form-row">
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">Rotation Period (Days)</label>
+                    <select 
+                      className="oh-form-select"
+                      value={createForm.rotationPeriod}
+                      onChange={(e) => handleInputChange('rotationPeriod', e.target.value)}
+                    >
+                      <option value="">Select Period</option>
+                      <option value="30">Monthly (30 days)</option>
+                      <option value="60">Bi-monthly (60 days)</option>
+                      <option value="90">Quarterly (90 days)</option>
+                      <option value="180">Semi-annually (180 days)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="oh-form-group">
+                  <label className="oh-form-label">Description *</label>
+                  <textarea 
+                    className="oh-form-textarea"
+                    placeholder="Enter description for the rotating work type assignment..."
+                    value={createForm.description}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    rows={4}
+                  />
+                </div>
+              </form>
+            </div>
+            
+            <div className="oh-modal-footer">
+              <button 
+                type="button"
+                className="oh-btn oh-btn--secondary"
+                onClick={() => setShowCreateModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button"
+                className="oh-btn oh-btn--primary"
+                onClick={handleCreateRotatingWorkTypeAssign}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <div className="oh-loading-spinner"></div>
+                    Assigning...
+                  </>
+                ) : (
+                  'Assign Work Type'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

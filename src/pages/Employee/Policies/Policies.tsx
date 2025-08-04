@@ -24,11 +24,95 @@ interface Policy {
   };
 }
 
+interface CreatePolicyForm {
+  title: string;
+  description: string;
+  category: string;
+  version: string;
+  status: string;
+  effectiveDate: string;
+  document: string;
+  tags: string;
+  acknowledgmentRequired: boolean;
+}
+
 const Policies: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const { isCollapsed } = useSidebar();
+
+  // Create modal state
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error' | 'warning';
+    message: string;
+  } | null>(null);
+
+  const [createForm, setCreateForm] = useState<CreatePolicyForm>({
+    title: '',
+    description: '',
+    category: '',
+    version: '',
+    status: '',
+    effectiveDate: '',
+    document: '',
+    tags: '',
+    acknowledgmentRequired: false
+  });
+
+  // Notification system
+  const showNotification = (type: 'success' | 'error' | 'warning', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 5000);
+  };
+
+  // Form handlers
+  const handleInputChange = (field: keyof CreatePolicyForm, value: string | boolean) => {
+    setCreateForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setCreateForm({
+      title: '',
+      description: '',
+      category: '',
+      version: '',
+      status: '',
+      effectiveDate: '',
+      document: '',
+      tags: '',
+      acknowledgmentRequired: false
+    });
+  };
+
+  // Handle create policy
+  const handleCreatePolicy = async () => {
+    // Validate required fields
+    if (!createForm.title || !createForm.description || !createForm.category || !createForm.version || !createForm.status || !createForm.effectiveDate) {
+      showNotification('error', 'Please fill in all required fields');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      resetForm();
+      setShowCreateModal(false);
+      setIsLoading(false);
+      showNotification('success', 'Policy created successfully!');
+    } catch (error) {
+      setIsLoading(false);
+      showNotification('error', 'Failed to create policy. Please try again.');
+    }
+  };
 
   // Mock data for policies
   const mockPolicies: Policy[] = [
@@ -224,12 +308,15 @@ const Policies: React.FC = () => {
                 <p className="oh-page-subtitle">Manage company policies and track employee acknowledgments</p>
               </div>
               <div className="oh-page-header__actions">
-                <button className="oh-btn oh-btn--primary">
+                <button 
+                  className="oh-btn-create-main"
+                  onClick={() => setShowCreateModal(true)}
+                >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                   </svg>
-                  Create
+                  Create Policy
                 </button>
               </div>
             </div>
@@ -412,6 +499,183 @@ const Policies: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Notification */}
+      {notification && (
+        <div className={`oh-notification oh-notification--${notification.type}`}>
+          <div className="oh-notification__content">
+            <span className="oh-notification__message">{notification.message}</span>
+            <button 
+              className="oh-notification__close"
+              onClick={() => setNotification(null)}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Create Policy Modal */}
+      {showCreateModal && (
+        <div className="oh-modal-overlay" onClick={() => setShowCreateModal(false)}>
+          <div className="oh-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="oh-modal-header">
+              <h2>Create Policy</h2>
+              <button 
+                className="oh-modal-close"
+                onClick={() => setShowCreateModal(false)}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="oh-modal-body">
+              <form className="oh-create-form">
+                <div className="oh-form-row">
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">Policy Title *</label>
+                    <input 
+                      type="text"
+                      className="oh-form-input"
+                      placeholder="Enter policy title..."
+                      value={createForm.title}
+                      onChange={(e) => handleInputChange('title', e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">Category *</label>
+                    <select 
+                      className="oh-form-select"
+                      value={createForm.category}
+                      onChange={(e) => handleInputChange('category', e.target.value)}
+                    >
+                      <option value="">Select Category</option>
+                      <option value="HR Policies">HR Policies</option>
+                      <option value="IT Policies">IT Policies</option>
+                      <option value="Security Policies">Security Policies</option>
+                      <option value="Finance Policies">Finance Policies</option>
+                      <option value="Operations">Operations</option>
+                      <option value="Compliance">Compliance</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="oh-form-row">
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">Version *</label>
+                    <input 
+                      type="text"
+                      className="oh-form-input"
+                      placeholder="e.g., 1.0, 2.1..."
+                      value={createForm.version}
+                      onChange={(e) => handleInputChange('version', e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">Status *</label>
+                    <select 
+                      className="oh-form-select"
+                      value={createForm.status}
+                      onChange={(e) => handleInputChange('status', e.target.value)}
+                    >
+                      <option value="">Select Status</option>
+                      <option value="draft">Draft</option>
+                      <option value="under_review">Under Review</option>
+                      <option value="active">Active</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="oh-form-row">
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">Effective Date *</label>
+                    <input 
+                      type="date"
+                      className="oh-form-input"
+                      value={createForm.effectiveDate}
+                      onChange={(e) => handleInputChange('effectiveDate', e.target.value)}
+                    />
+                  </div>
+                  
+                  <div className="oh-form-group">
+                    <label className="oh-form-label">Document/File Name</label>
+                    <input 
+                      type="text"
+                      className="oh-form-input"
+                      placeholder="e.g., policy_document.pdf"
+                      value={createForm.document}
+                      onChange={(e) => handleInputChange('document', e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="oh-form-group">
+                  <label className="oh-form-label">Description *</label>
+                  <textarea 
+                    className="oh-form-textarea"
+                    placeholder="Enter detailed description of the policy..."
+                    value={createForm.description}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    rows={4}
+                  />
+                </div>
+
+                <div className="oh-form-group">
+                  <label className="oh-form-label">Tags</label>
+                  <input 
+                    type="text"
+                    className="oh-form-input"
+                    placeholder="Enter tags separated by commas (e.g., mandatory, ethics, security)"
+                    value={createForm.tags}
+                    onChange={(e) => handleInputChange('tags', e.target.value)}
+                  />
+                  <small className="oh-field-help">Separate multiple tags with commas</small>
+                </div>
+
+                <div className="oh-form-group">
+                  <label className="oh-form-checkbox">
+                    <input 
+                      type="checkbox"
+                      checked={createForm.acknowledgmentRequired}
+                      onChange={(e) => handleInputChange('acknowledgmentRequired', e.target.checked)}
+                    />
+                    <span className="oh-form-checkbox__checkmark"></span>
+                    <span className="oh-form-checkbox__label">Require employee acknowledgment</span>
+                  </label>
+                </div>
+              </form>
+            </div>
+            
+            <div className="oh-modal-footer">
+              <button 
+                type="button"
+                className="oh-btn oh-btn--secondary"
+                onClick={() => setShowCreateModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button"
+                className="oh-btn oh-btn--primary"
+                onClick={handleCreatePolicy}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <div className="oh-loading-spinner"></div>
+                    Creating...
+                  </>
+                ) : (
+                  'Create Policy'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
