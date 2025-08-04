@@ -22,7 +22,7 @@
 
 .oh-document-requests-container {
   padding: 24px;
-  padding-top: 94px; /* Add space for fixed navbar (70px navbar + 24px original padding) */
+   /* Add space for fixed navbar (70px navbar + 24px original padding) */
   background-color: #f8f9fa;
   min-height: calc(100vh - 70px); /* Account for navbar height */
 }
@@ -36,8 +36,8 @@
 }
 
 .oh-document-requests-title h1 {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: 700;
   color: #1a1a1a;
   margin: 0 0 8px 0;
 }

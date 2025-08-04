@@ -54,125 +54,215 @@ const EmployeeProfile: React.FC = () => {
   const [isEditingContract, setIsEditingContract] = useState(false);
   const [personalFormData, setPersonalFormData] = useState({...mockEmployee});
   const [bankFormData, setBankFormData] = useState({...mockBankInfo});
-  const [notification, setNotification] = useState<{type: 'success' | 'error' | 'info', message: string} | null>(null);
-  const [isGlobalEdit, setIsGlobalEdit] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationType, setNotificationType] = useState<'success' | 'error' | 'info'>('success');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [pendingTab, setPendingTab] = useState<string>('');
   const { isCollapsed } = useSidebar();
 
-  // Show notification with auto-hide
-  const showNotification = (type: 'success' | 'error' | 'info', message: string) => {
-    setNotification({ type, message });
-    setTimeout(() => {
-      setNotification(null);
-    }, 4000); // Hide after 4 seconds
+  const hasUnsavedChanges = () => {
+    return isEditingPersonal || isEditingWork || isEditingBank || isEditingContract;
   };
 
-  const handlePersonalSave = () => {
-    // Here you would typically make an API call to save the data
-    console.log('Saving personal data:', personalFormData);
+  const handleTabSwitch = (tabName: string) => {
+    if (hasUnsavedChanges() && tabName !== activeTab) {
+      setPendingTab(tabName);
+      setShowConfirmDialog(true);
+    } else {
+      setActiveTab(tabName);
+    }
+  };
+
+  const confirmTabSwitch = () => {
+    // Reset all edit states
     setIsEditingPersonal(false);
-    showNotification('success', 'Personal information updated successfully!');
+    setIsEditingWork(false);
+    setIsEditingBank(false);
+    setIsEditingContract(false);
+    
+    // Reset form data
+    setPersonalFormData({...mockEmployee});
+    setBankFormData({...mockBankInfo});
+    
+    // Switch to pending tab
+    setActiveTab(pendingTab);
+    setShowConfirmDialog(false);
+    showNotificationMessage('Unsaved changes discarded', 'info');
+  };
+
+  const cancelTabSwitch = () => {
+    setShowConfirmDialog(false);
+    setPendingTab('');
+  };
+
+  const showNotificationMessage = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+    setNotificationMessage(message);
+    setNotificationType(type);
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 4000);
+  };
+
+  const handlePersonalSave = async () => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Here you would typically make an API call to save the data
+      console.log('Saving personal data:', personalFormData);
+      
+      setIsEditingPersonal(false);
+      showNotificationMessage('Personal information updated successfully!');
+    } catch (error) {
+      showNotificationMessage('Failed to update personal information. Please try again.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handlePersonalCancel = () => {
     setPersonalFormData({...mockEmployee});
     setIsEditingPersonal(false);
-    showNotification('info', 'Changes discarded');
+    showNotificationMessage('Changes discarded', 'info');
   };
 
-  const handleWorkSave = () => {
-    console.log('Saving work data:', personalFormData);
-    setIsEditingWork(false);
-    showNotification('success', 'Work information updated successfully!');
-  };
-
-  const handleWorkCancel = () => {
-    setPersonalFormData({...mockEmployee});
-    setIsEditingWork(false);
-    showNotification('info', 'Changes discarded');
-  };
-
-  const handleBankSave = () => {
-    // Here you would typically make an API call to save the data
-    console.log('Saving bank data:', bankFormData);
-    setIsEditingBank(false);
-    showNotification('success', 'Bank information updated successfully!');
+  const handleBankSave = async () => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Here you would typically make an API call to save the data
+      console.log('Saving bank data:', bankFormData);
+      
+      setIsEditingBank(false);
+      showNotificationMessage('Bank information updated successfully!');
+    } catch (error) {
+      showNotificationMessage('Failed to update bank information. Please try again.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleBankCancel = () => {
     setBankFormData({...mockBankInfo});
     setIsEditingBank(false);
-    showNotification('info', 'Changes discarded');
+    showNotificationMessage('Changes discarded', 'info');
   };
 
-  const handleContractSave = () => {
-    console.log('Saving contract data:', personalFormData);
-    setIsEditingContract(false);
-    showNotification('success', 'Contract details updated successfully!');
+  const handleWorkSave = async () => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log('Saving work data:', personalFormData);
+      
+      setIsEditingWork(false);
+      showNotificationMessage('Work information updated successfully!');
+    } catch (error) {
+      showNotificationMessage('Failed to update work information. Please try again.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleWorkCancel = () => {
+    setPersonalFormData({...mockEmployee});
+    setIsEditingWork(false);
+    showNotificationMessage('Changes discarded', 'info');
+  };
+
+  const handleContractSave = async () => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log('Saving contract data:', personalFormData);
+      
+      setIsEditingContract(false);
+      showNotificationMessage('Contract details updated successfully!');
+    } catch (error) {
+      showNotificationMessage('Failed to update contract details. Please try again.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleContractCancel = () => {
     setPersonalFormData({...mockEmployee});
     setIsEditingContract(false);
-    showNotification('info', 'Changes discarded');
+    showNotificationMessage('Changes discarded', 'info');
   };
 
-  // Smart navigation for edit functionality
-  const handleTabEdit = (targetTab: string) => {
-    if (activeTab !== targetTab) {
-      setActiveTab(targetTab);
-      showNotification('info', `Navigated to ${targetTab} section for editing`);
+  const handleSaveAllChanges = async () => {
+    setIsLoading(true);
+    try {
+      // Simulate API calls for all sections
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Save all data
+      console.log('Saving all data:', {
+        personal: personalFormData,
+        bank: bankFormData
+      });
+      
+      // Reset all edit states
+      setIsEditingPersonal(false);
+      setIsEditingWork(false);
+      setIsEditingBank(false);
+      setIsEditingContract(false);
+      
+      showNotificationMessage('All changes saved successfully!');
+    } catch (error) {
+      showNotificationMessage('Failed to save some changes. Please try again.', 'error');
+    } finally {
+      setIsLoading(false);
     }
-    // Enable edit mode after navigation
-    setTimeout(() => {
-      switch (targetTab) {
-        case 'about':
-          setIsEditingPersonal(true);
-          setIsEditingWork(true);
-          setIsEditingBank(true);
-          setIsEditingContract(true);
-          break;
-        // Add more cases for other tabs as needed
-      }
-    }, 300);
   };
 
-  // Global edit functionality
-  const handleGlobalEdit = () => {
-    setIsGlobalEdit(true);
-    // Navigate to 'about' tab if not already there
-    if (activeTab !== 'about') {
-      setActiveTab('about');
-      showNotification('info', 'Navigated to profile section for editing');
-    }
-    // Enable edit mode for all sections
-    setTimeout(() => {
-      setIsEditingPersonal(true);
-      setIsEditingWork(true);
-      setIsEditingBank(true);
-      setIsEditingContract(true);
-    }, 300); // Small delay for smooth transition
-  };
-
-  const handleGlobalSave = () => {
-    // Save all sections
-    handlePersonalSave();
-    handleWorkSave();
-    handleBankSave();
-    handleContractSave();
-    setIsGlobalEdit(false);
-    showNotification('success', 'All profile information updated successfully!');
-  };
-
-  const handleGlobalCancel = () => {
-    // Cancel all sections
+  const handleCancelAllChanges = () => {
+    // Reset all form data
     setPersonalFormData({...mockEmployee});
     setBankFormData({...mockBankInfo});
+    
+    // Reset all edit states
     setIsEditingPersonal(false);
     setIsEditingWork(false);
     setIsEditingBank(false);
     setIsEditingContract(false);
-    setIsGlobalEdit(false);
-    showNotification('info', 'All changes discarded');
+    
+    showNotificationMessage('All changes discarded', 'info');
+  };
+
+  const handleTabEdit = (tabName: string) => {
+    // Navigate to the specific tab and enable editing
+    setActiveTab(tabName);
+    
+    // Enable editing for the specific section
+    switch (tabName) {
+      case 'about':
+        setIsEditingPersonal(true);
+        setIsEditingWork(true);
+        setIsEditingBank(true);
+        setIsEditingContract(true);
+        break;
+      case 'work-type-shift':
+        // Handle work type editing if needed
+        break;
+      case 'documents':
+        // Handle document editing if needed
+        break;
+      default:
+        break;
+    }
+    
+    showNotificationMessage(`Switched to ${tabName} section in edit mode`, 'info');
   };
 
   const renderTabContent = () => {
@@ -182,7 +272,7 @@ const EmployeeProfile: React.FC = () => {
           <div className="oh-profile-content">
             <div className="oh-profile-cards-grid">
               {/* Personal Information Card */}
-              <div className={`oh-profile-card ${isEditingPersonal ? 'editing' : ''}`}>
+              <div className="oh-profile-card">
                 <div className="oh-profile-card-header">
                   <h3>Personal Information</h3>
                   <div className="oh-profile-card-actions">
@@ -202,15 +292,21 @@ const EmployeeProfile: React.FC = () => {
                         <button 
                           className="oh-profile-save-btn"
                           onClick={handlePersonalSave}
+                          disabled={isLoading}
                         >
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="20,6 9,17 4,12"></polyline>
-                          </svg>
+                          {isLoading ? (
+                            <div className="oh-loading-spinner"></div>
+                          ) : (
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="20,6 9,17 4,12"></polyline>
+                            </svg>
+                          )}
                           Save
                         </button>
                         <button 
                           className="oh-profile-cancel-btn"
                           onClick={handlePersonalCancel}
+                          disabled={isLoading}
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -523,7 +619,7 @@ const EmployeeProfile: React.FC = () => {
               </div>
 
               {/* Work Information Card */}
-              <div className={`oh-profile-card ${isEditingWork ? 'editing' : ''}`}>
+              <div className="oh-profile-card">
                 <div className="oh-profile-card-header">
                   <h3>Work Information</h3>
                   <div className="oh-profile-card-actions">
@@ -543,15 +639,21 @@ const EmployeeProfile: React.FC = () => {
                         <button 
                           className="oh-profile-save-btn"
                           onClick={handleWorkSave}
+                          disabled={isLoading}
                         >
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="20,6 9,17 4,12"></polyline>
-                          </svg>
+                          {isLoading ? (
+                            <div className="oh-loading-spinner"></div>
+                          ) : (
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="20,6 9,17 4,12"></polyline>
+                            </svg>
+                          )}
                           Save
                         </button>
                         <button 
                           className="oh-profile-cancel-btn"
                           onClick={handleWorkCancel}
+                          disabled={isLoading}
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -661,7 +763,7 @@ const EmployeeProfile: React.FC = () => {
               </div>
 
               {/* Bank Information Card */}
-              <div className={`oh-profile-card ${isEditingBank ? 'editing' : ''}`}>
+              <div className="oh-profile-card">
                 <div className="oh-profile-card-header">
                   <h3>Bank Information</h3>
                   <div className="oh-profile-card-actions">
@@ -681,15 +783,21 @@ const EmployeeProfile: React.FC = () => {
                         <button 
                           className="oh-profile-save-btn"
                           onClick={handleBankSave}
+                          disabled={isLoading}
                         >
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="20,6 9,17 4,12"></polyline>
-                          </svg>
+                          {isLoading ? (
+                            <div className="oh-loading-spinner"></div>
+                          ) : (
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="20,6 9,17 4,12"></polyline>
+                            </svg>
+                          )}
                           Save
                         </button>
                         <button 
                           className="oh-profile-cancel-btn"
                           onClick={handleBankCancel}
+                          disabled={isLoading}
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -775,7 +883,7 @@ const EmployeeProfile: React.FC = () => {
               </div>
 
               {/* Contract Details Card */}
-              <div className={`oh-profile-card ${isEditingContract ? 'editing' : ''}`}>
+              <div className="oh-profile-card">
                 <div className="oh-profile-card-header">
                   <h3>Contract Details</h3>
                   <div className="oh-profile-card-actions">
@@ -795,15 +903,21 @@ const EmployeeProfile: React.FC = () => {
                         <button 
                           className="oh-profile-save-btn"
                           onClick={handleContractSave}
+                          disabled={isLoading}
                         >
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="20,6 9,17 4,12"></polyline>
-                          </svg>
+                          {isLoading ? (
+                            <div className="oh-loading-spinner"></div>
+                          ) : (
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="20,6 9,17 4,12"></polyline>
+                            </svg>
+                          )}
                           Save
                         </button>
                         <button 
                           className="oh-profile-cancel-btn"
                           onClick={handleContractCancel}
+                          disabled={isLoading}
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1425,45 +1539,6 @@ const EmployeeProfile: React.FC = () => {
       <Sidebar />
       <div className={`oh-main-content ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
         <Navbar pageTitle="Employee Profile" />
-        
-        {/* Notification Component */}
-        {notification && (
-          <div className={`oh-notification oh-notification-${notification.type} ${notification ? 'show' : ''}`}>
-            <div className="oh-notification-content">
-              <div className="oh-notification-icon">
-                {notification.type === 'success' && (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="20,6 9,17 4,12"></polyline>
-                  </svg>
-                )}
-                {notification.type === 'error' && (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                )}
-                {notification.type === 'info' && (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                  </svg>
-                )}
-              </div>
-              <span className="oh-notification-message">{notification.message}</span>
-              <button 
-                className="oh-notification-close"
-                onClick={() => setNotification(null)}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-            </div>
-          </div>
-        )}
-        
         <div className="oh-profile-container">
           <div className="oh-profile-header">
             <div className="oh-profile-header-info">
@@ -1477,42 +1552,42 @@ const EmployeeProfile: React.FC = () => {
                 <h1>{mockEmployee.firstName} {mockEmployee.lastName}</h1>
                 <p>{mockEmployee.position} • {mockEmployee.department}</p>
                 <p>{mockEmployee.email}</p>
-              </div>
-              {/* Rest of the component remains the same */}
-              <div className="oh-profile-actions">
-                {!isGlobalEdit ? (
-                  <button 
-                    className="oh-profile-edit-btn"
-                    onClick={handleGlobalEdit}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {hasUnsavedChanges() && (
+                  <div className="oh-edit-mode-indicator">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                       <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                     </svg>
-                    Edit Profile
-                  </button>
-                ) : (
-                  <div className="oh-profile-global-actions">
-                    <button 
-                      className="oh-profile-save-btn-large"
-                      onClick={handleGlobalSave}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="20,6 9,17 4,12"></polyline>
-                      </svg>
-                      Save All Changes
-                    </button>
-                    <button 
-                      className="oh-profile-cancel-btn-large"
-                      onClick={handleGlobalCancel}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                      </svg>
-                      Cancel All
-                    </button>
+                    <span>Edit Mode Active</span>
                   </div>
+                )}
+              </div>
+              <div className="oh-profile-actions">
+                <button 
+                  className="oh-profile-edit-btn"
+                  onClick={() => handleTabEdit('about')}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  {hasUnsavedChanges() ? 
+                    `Editing (${[isEditingPersonal, isEditingWork, isEditingBank, isEditingContract].filter(Boolean).length} sections)` : 
+                    'Edit Profile'
+                  }
+                </button>
+                {hasUnsavedChanges() && (
+                  <button 
+                    className="oh-profile-view-btn"
+                    onClick={handleCancelAllChanges}
+                    disabled={isLoading}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    View Mode
+                  </button>
                 )}
               </div>
             </div>
@@ -1521,15 +1596,45 @@ const EmployeeProfile: React.FC = () => {
           <div className="oh-profile-tabs">
             <button 
               className={`oh-profile-tab ${activeTab === 'about' ? 'active' : ''}`}
-              onClick={() => setActiveTab('about')}
+              onClick={() => handleTabSwitch('about')}
             >
               About
+              {activeTab !== 'about' && (
+                <span 
+                  className="oh-tab-edit-icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTabEdit('about');
+                  }}
+                  title="Edit this section"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </span>
+              )}
             </button>
             <button 
               className={`oh-profile-tab ${activeTab === 'work-type-shift' ? 'active' : ''}`}
-              onClick={() => setActiveTab('work-type-shift')}
+              onClick={() => handleTabSwitch('work-type-shift')}
             >
               Work Type & Shift
+              {activeTab !== 'work-type-shift' && (
+                <span 
+                  className="oh-tab-edit-icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTabEdit('work-type-shift');
+                  }}
+                  title="Edit this section"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </span>
+              )}
             </button>
             <button 
               className={`oh-profile-tab ${activeTab === 'attendance' ? 'active' : ''}`}
@@ -1578,6 +1683,21 @@ const EmployeeProfile: React.FC = () => {
               onClick={() => setActiveTab('documents')}
             >
               Documents
+              {activeTab !== 'documents' && (
+                <span 
+                  className="oh-tab-edit-icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTabEdit('documents');
+                  }}
+                  title="Edit this section"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </span>
+              )}
             </button>
             <button 
               className={`oh-profile-tab ${activeTab === 'bonus-points' ? 'active' : ''}`}
@@ -1597,6 +1717,124 @@ const EmployeeProfile: React.FC = () => {
         </div>
       </div>
       <QuickAccess />
+      
+      {/* Save All Changes Floating Bar */}
+      {hasUnsavedChanges() && (
+        <div className="oh-save-all-bar">
+          <div className="oh-save-all-content">
+            <div className="oh-save-all-info">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>You have unsaved changes in {
+                [
+                  isEditingPersonal && 'Personal Info',
+                  isEditingWork && 'Work Info', 
+                  isEditingBank && 'Bank Info',
+                  isEditingContract && 'Contract Details'
+                ].filter(Boolean).join(', ')
+              }</span>
+            </div>
+            <div className="oh-save-all-actions">
+              <button 
+                className="oh-save-all-cancel"
+                onClick={handleCancelAllChanges}
+                disabled={isLoading}
+              >
+                Cancel All
+              </button>
+              <button 
+                className="oh-save-all-btn"
+                onClick={handleSaveAllChanges}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <div className="oh-loading-spinner"></div>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polyline points="20,6 9,17 4,12"></polyline>
+                    </svg>
+                    Save All Changes
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Confirmation Dialog */}
+      {showConfirmDialog && (
+        <div className="oh-modal-overlay">
+          <div className="oh-confirm-dialog">
+            <div className="oh-confirm-header">
+              <h4>Unsaved Changes</h4>
+            </div>
+            <div className="oh-confirm-body">
+              <p>You have unsaved changes. Are you sure you want to leave this section? All unsaved changes will be lost.</p>
+            </div>
+            <div className="oh-confirm-footer">
+              <button 
+                className="oh-btn-secondary"
+                onClick={cancelTabSwitch}
+              >
+                Cancel
+              </button>
+              <button 
+                className="oh-btn-danger"
+                onClick={confirmTabSwitch}
+              >
+                Discard Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Notification Toast */}
+      {showNotification && (
+        <div className={`oh-notification oh-notification-${notificationType}`}>
+          <div className="oh-notification-content">
+            <div className="oh-notification-icon">
+              {notificationType === 'success' && (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="20,6 9,17 4,12"></polyline>
+                </svg>
+              )}
+              {notificationType === 'error' && (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="15" y1="9" x2="9" y2="15"></line>
+                  <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+              )}
+              {notificationType === 'info' && (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              )}
+            </div>
+            <span className="oh-notification-message">{notificationMessage}</span>
+            <button 
+              className="oh-notification-close"
+              onClick={() => setShowNotification(false)}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

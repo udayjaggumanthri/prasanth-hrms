@@ -23,7 +23,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  padding-top: 90px; /* Add space for fixed navbar */
+  /* Add space for fixed navbar */
   background-color: #f8f9fa;
   min-height: calc(100vh - 70px); /* Account for navbar height */
   width: 100%;
@@ -76,6 +76,37 @@
 }
 
 .oh-profile-edit-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.oh-profile-view-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.oh-profile-view-btn:hover:not(:disabled) {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+.oh-profile-view-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.oh-profile-view-btn svg {
   width: 16px;
   height: 16px;
 }
@@ -162,7 +193,7 @@
   font-size: 14px;
   font-family: inherit;
   background: white;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
 }
 
 .oh-profile-input:focus,
@@ -171,6 +202,7 @@
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  transform: translateY(-1px);
 }
 
 .oh-profile-textarea {
@@ -178,67 +210,40 @@
   min-height: 60px;
 }
 
-/* Global Edit Actions */
-.oh-profile-global-actions {
-  display: flex;
-  gap: 12px;
+/* Loading Spinner */
+.oh-loading-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-.oh-profile-save-btn-large {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.oh-profile-save-btn-large:hover {
-  background: #218838;
-}
-
-.oh-profile-cancel-btn-large {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.oh-profile-cancel-btn-large:hover {
-  background: #5a6268;
+/* Button Disabled State */
+.oh-profile-save-btn:disabled,
+.oh-profile-cancel-btn:disabled,
+.oh-profile-edit-btn-small:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Notification System */
 .oh-notification {
   position: fixed;
-  top: 80px;
+  top: 90px;
   right: 20px;
-  z-index: 1000;
   max-width: 400px;
+  z-index: 1000;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateX(120%);
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  opacity: 0;
-}
-
-.oh-notification.show {
-  transform: translateX(0);
-  opacity: 1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  animation: slideInRight 0.3s ease-out;
 }
 
 .oh-notification-success {
@@ -254,23 +259,22 @@
 }
 
 .oh-notification-info {
-  background: #cce7ff;
-  border: 1px solid #b3d9ff;
-  color: #004085;
+  background: #d1ecf1;
+  border: 1px solid #bee5eb;
+  color: #0c5460;
 }
 
 .oh-notification-content {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
+  padding: 12px 16px;
+  gap: 10px;
 }
 
 .oh-notification-icon {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .oh-notification-message {
@@ -287,107 +291,193 @@
   padding: 4px;
   border-radius: 4px;
   transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  opacity: 0.7;
 }
 
 .oh-notification-close:hover {
+  opacity: 1;
   background: rgba(0, 0, 0, 0.1);
 }
 
-/* Edit Mode Animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Confirmation Dialog */
+.oh-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.oh-confirm-dialog {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
+  animation: scaleIn 0.2s ease-out;
+}
+
+.oh-confirm-header {
+  padding: 20px 20px 0 20px;
+}
+
+.oh-confirm-header h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.oh-confirm-body {
+  padding: 16px 20px;
+}
+
+.oh-confirm-body p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.oh-confirm-footer {
+  padding: 0 20px 20px 20px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.oh-btn-secondary {
+  padding: 8px 16px;
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #6c757d;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.oh-btn-secondary:hover {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+.oh-btn-danger {
+  padding: 8px 16px;
+  border: 1px solid #dc3545;
+  background: #dc3545;
+  color: white;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.oh-btn-danger:hover {
+  background: #c82333;
+  border-color: #bd2130;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Enhanced Button Animations */
+.oh-profile-save-btn,
+.oh-profile-cancel-btn,
+.oh-profile-edit-btn-small {
+  transition: all 0.2s ease, transform 0.1s ease;
+}
+
+.oh-profile-save-btn:hover:not(:disabled),
+.oh-profile-cancel-btn:hover:not(:disabled),
+.oh-profile-edit-btn-small:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.oh-profile-save-btn:active:not(:disabled),
+.oh-profile-cancel-btn:active:not(:disabled),
+.oh-profile-edit-btn-small:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Animation on Edit Mode */
 .oh-profile-card {
   transition: all 0.3s ease;
 }
 
-.oh-profile-card.editing {
+.oh-profile-card:has(.oh-profile-edit-actions) {
   border-color: #007bff;
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
   transform: translateY(-2px);
 }
 
-.oh-profile-card.editing .oh-profile-card-header {
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: white;
+/* Tab Animation */
+.oh-profile-tab {
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-.oh-profile-card.editing .oh-profile-card-header h3 {
-  color: white;
+.oh-profile-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #007bff;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
 }
 
-.oh-profile-input,
-.oh-profile-select,
-.oh-profile-textarea {
-  transition: all 0.2s ease;
+.oh-profile-tab:hover::after {
+  width: 70%;
 }
 
-.oh-profile-input:focus,
-.oh-profile-select:focus,
-.oh-profile-textarea:focus {
-  transform: scale(1.02);
+.oh-profile-tab.active::after {
+  width: 100%;
 }
 
+/* Field Focus Animation */
 .oh-profile-field {
   transition: all 0.2s ease;
 }
 
-.oh-profile-field.editing {
-  background: rgba(0, 123, 255, 0.02);
-  border-radius: 4px;
-  padding: 8px;
-  margin: -8px;
-}
-
-/* Button Hover Effects */
-.oh-profile-edit-btn,
-.oh-profile-save-btn-large,
-.oh-profile-cancel-btn-large,
-.oh-profile-edit-btn-small,
-.oh-profile-save-btn,
-.oh-profile-cancel-btn {
-  transition: all 0.2s ease;
-}
-
-.oh-profile-edit-btn:hover,
-.oh-profile-save-btn-large:hover,
-.oh-profile-cancel-btn-large:hover,
-.oh-profile-edit-btn-small:hover,
-.oh-profile-save-btn:hover,
-.oh-profile-cancel-btn:hover {
+.oh-profile-field:has(.oh-profile-input:focus),
+.oh-profile-field:has(.oh-profile-select:focus),
+.oh-profile-field:has(.oh-profile-textarea:focus) {
   transform: translateY(-1px);
-}
-
-/* Loading Animation for Save Actions */
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-.oh-profile-card.saving {
-  animation: pulse 1s ease-in-out;
-}
-
-/* Success Animation */
-@keyframes success-bounce {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-.oh-profile-card.success {
-  animation: success-bounce 0.5s ease-in-out;
-  border-color: #28a745;
-}
-
-/* Tab Animation when navigating */
-.oh-profile-tab {
-  transition: all 0.3s ease;
-}
-
-.oh-profile-tab.active {
-  transform: translateY(-2px);
 }
 
 .oh-profile-avatar {
@@ -412,6 +502,36 @@
   margin: 4px 0;
   color: #6c757d;
   font-size: 14px;
+}
+
+.oh-edit-mode-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 20px;
+  color: #856404;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+  animation: pulse 2s infinite;
+}
+
+.oh-edit-mode-indicator svg {
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 /* Profile Tabs */
@@ -441,6 +561,10 @@
   white-space: nowrap;
   border-bottom: 2px solid transparent;
   transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .oh-profile-tab:hover {
@@ -452,6 +576,148 @@
   color: #007bff;
   border-bottom-color: #007bff;
   background-color: #fff;
+}
+
+/* Tab Edit Icon */
+.oh-tab-edit-icon {
+  opacity: 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.oh-profile-tab:hover .oh-tab-edit-icon {
+  opacity: 0.7;
+}
+
+.oh-tab-edit-icon:hover {
+  opacity: 1 !important;
+  background: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+/* Save All Changes Floating Bar */
+.oh-save-all-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e9ecef;
+  z-index: 1000;
+  animation: slideInUp 0.3s ease-out;
+  max-width: 600px;
+  width: 90%;
+}
+
+.oh-save-all-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  gap: 20px;
+}
+
+.oh-save-all-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #6c757d;
+  font-size: 14px;
+  flex: 1;
+}
+
+.oh-save-all-info svg {
+  color: #ffc107;
+  flex-shrink: 0;
+}
+
+.oh-save-all-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.oh-save-all-cancel {
+  padding: 8px 16px;
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #6c757d;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.oh-save-all-cancel:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+  transform: translateY(-1px);
+}
+
+.oh-save-all-btn {
+  padding: 10px 20px;
+  border: none;
+  background: #28a745;
+  color: white;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.oh-save-all-btn:hover:not(:disabled) {
+  background: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.oh-save-all-btn:disabled,
+.oh-save-all-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments for Save All Bar */
+@media (max-width: 768px) {
+  .oh-save-all-content {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .oh-save-all-info {
+    justify-content: center;
+  }
+  
+  .oh-save-all-actions {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Profile Content */
@@ -1002,18 +1268,6 @@
     width: 100%;
     justify-content: center;
   }
-
-  .oh-profile-global-actions {
-    flex-direction: column;
-    width: 100%;
-    gap: 8px;
-  }
-
-  .oh-profile-save-btn-large,
-  .oh-profile-cancel-btn-large {
-    width: 100%;
-    justify-content: center;
-  }
   
   .oh-profile-cards-grid {
     grid-template-columns: 1fr;
@@ -1035,14 +1289,6 @@
     min-width: 120px;
     font-size: 12px;
     padding: 10px 8px;
-  }
-
-  /* Mobile notification positioning */
-  .oh-notification {
-    top: 60px;
-    right: 10px;
-    left: 10px;
-    max-width: none;
   }
 
   .oh-profile-attendance-item,

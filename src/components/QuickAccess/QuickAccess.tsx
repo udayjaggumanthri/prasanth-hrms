@@ -12,6 +12,13 @@ import DocumentRequestModal from './modals/DocumentRequestModal';
 
 export interface QuickAccessProps {}
 
+interface QuickAction {
+  id: string;
+  label: string;
+  icon: string;
+  onClick: (e: React.MouseEvent) => void;
+}
+
 const QuickAccess: React.FC<QuickAccessProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
@@ -24,101 +31,9 @@ const QuickAccess: React.FC<QuickAccessProps> = () => {
   const [showDashboardChartsModal, setShowDashboardChartsModal] = useState(false);
   const [showDocumentRequestModal, setShowDocumentRequestModal] = useState(false);
 
-  // Enhanced keyboard event handling
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-        console.log('⌨️ Quick Access menu closed via ESC key');
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      console.log('⌨️ Keyboard event listener added for Quick Access menu');
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen]);
-
-  // Enhanced event handlers for each modal - 9 Button Event Listeners
-  const handleAttendanceClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('🕒 Opening Attendance Request Modal...');
-    setShowAttendanceModal(true);
-    setIsOpen(false);
-  };
-
-  const handleLeaveClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('📅 Opening Leave Request Modal...');
-    setShowLeaveModal(true);
-    setIsOpen(false);
-  };
-
-  const handleShiftClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('🔄 Opening Shift Request Modal...');
-    setShowShiftModal(true);
-    setIsOpen(false);
-  };
-
-  const handleWorkTypeClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('💼 Opening Work Type Modal...');
-    setShowWorkTypeModal(true);
-    setIsOpen(false);
-  };
-
-  const handleReimbursementClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('💰 Opening Reimbursement Modal...');
-    setShowReimbursementModal(true);
-    setIsOpen(false);
-  };
-
-  const handleAssetClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('📦 Opening Asset Request Modal...');
-    setShowAssetRequestModal(true);
-    setIsOpen(false);
-  };
-
-  const handleTicketClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('🎫 Opening Ticket Modal...');
-    setShowTicketModal(true);
-    setIsOpen(false);
-  };
-
-  const handleChartsClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('📊 Opening Dashboard Charts Modal...');
-    setShowDashboardChartsModal(true);
-    setIsOpen(false);
-  };
-
-  const handleDocumentClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('📄 Opening Document Request Modal...');
-    setShowDocumentRequestModal(true);
-    setIsOpen(false);
-  };
-
   // Debug: Log modal states
   React.useEffect(() => {
-    console.log('📊 Modal states updated:', {
+    console.log('Modal states:', {
       showAttendanceModal,
       showLeaveModal,
       showShiftModal,
@@ -131,61 +46,114 @@ const QuickAccess: React.FC<QuickAccessProps> = () => {
     });
   }, [showAttendanceModal, showLeaveModal, showShiftModal, showWorkTypeModal, showReimbursementModal, showAssetRequestModal, showTicketModal, showDashboardChartsModal, showDocumentRequestModal]);
 
-  // 9 Quick Actions Configuration with Event Listeners
   const quickActions = [
     {
       id: 'attendance',
       label: 'Create Attendance Request',
       icon: 'time-outline',
-      onClick: handleAttendanceClick
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Attendance modal opening...');
+        setShowAttendanceModal(true);
+        setIsOpen(false);
+      }
     },
     {
       id: 'leave',
       label: 'Create Leave Request',
       icon: 'calendar-outline',
-      onClick: handleLeaveClick
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Leave modal opening...');
+        setShowLeaveModal(true);
+        setIsOpen(false);
+      }
     },
     {
       id: 'shift',
       label: 'Create Shift Request',
       icon: 'swap-horizontal-outline',
-      onClick: handleShiftClick
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Shift modal opening...');
+        setShowShiftModal(true);
+        setIsOpen(false);
+      }
     },
     {
       id: 'worktype',
       label: 'Create Work Type',
       icon: 'briefcase-outline',
-      onClick: handleWorkTypeClick
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Work type modal opening...');
+        setShowWorkTypeModal(true);
+        setIsOpen(false);
+      }
     },
     {
       id: 'reimbursement',
       label: 'Create Reimbursement',
       icon: 'receipt-outline',
-      onClick: handleReimbursementClick
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Reimbursement modal opening...');
+        setShowReimbursementModal(true);
+        setIsOpen(false);
+      }
     },
     {
       id: 'asset',
       label: 'Create Asset Request',
       icon: 'cube-outline',
-      onClick: handleAssetClick
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Asset modal opening...');
+        setShowAssetRequestModal(true);
+        setIsOpen(false);
+      }
     },
     {
       id: 'ticket',
       label: 'Create Ticket',
       icon: 'help-circle-outline',
-      onClick: handleTicketClick
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Ticket modal opening...');
+        setShowTicketModal(true);
+        setIsOpen(false);
+      }
     },
     {
       id: 'charts',
       label: 'Dashboard Charts',
       icon: 'bar-chart-outline',
-      onClick: handleChartsClick
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Dashboard Charts modal opening...');
+        setShowDashboardChartsModal(true);
+        setIsOpen(false);
+      }
     },
     {
       id: 'document',
       label: 'Request Document',
       icon: 'document-text-outline',
-      onClick: handleDocumentClick
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Document Request modal opening...');
+        setShowDocumentRequestModal(true);
+        setIsOpen(false);
+      }
     }
   ];
 
@@ -291,28 +259,18 @@ const QuickAccess: React.FC<QuickAccessProps> = () => {
     <>
       {/* Quick Access Container */}
       <div className="oh-quick-access">
-        {/* Quick Action Menu with Enhanced Event Listeners */}
+        {/* Quick Action Menu */}
         {isOpen && (
-          <div className="oh-quick-access__menu" role="menu" aria-label="Quick Actions">
+          <div className="oh-quick-access__menu">
             {quickActions.map((action, index) => (
               <button
                 key={action.id}
                 className="oh-quick-access__menu-item"
                 onClick={action.onClick}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    action.onClick(e as any);
-                  }
-                }}
                 title={action.label}
-                aria-label={action.label}
-                role="menuitem"
-                tabIndex={0}
                 style={{
                   transitionDelay: `${index * 50}ms`
                 }}
-                data-testid={`quick-action-${action.id}`}
               >
                 {getIonIcon(action.icon)}
               </button>
@@ -343,69 +301,42 @@ const QuickAccess: React.FC<QuickAccessProps> = () => {
         />
       )}
 
-      {/* 9 Modals with Enhanced Event Listeners */}
+      {/* Modals */}
       <AttendanceRequestModal 
         isOpen={showAttendanceModal} 
-        onClose={() => {
-          console.log('🕒 Attendance Request Modal closed');
-          setShowAttendanceModal(false);
-        }} 
+        onClose={() => setShowAttendanceModal(false)} 
       />
       <LeaveRequestModal 
         isOpen={showLeaveModal} 
-        onClose={() => {
-          console.log('📅 Leave Request Modal closed');
-          setShowLeaveModal(false);
-        }} 
+        onClose={() => setShowLeaveModal(false)} 
       />
       <ShiftRequestModal 
         isOpen={showShiftModal} 
-        onClose={() => {
-          console.log('🔄 Shift Request Modal closed');
-          setShowShiftModal(false);
-        }} 
+        onClose={() => setShowShiftModal(false)} 
       />
       <WorkTypeModal 
         isOpen={showWorkTypeModal} 
-        onClose={() => {
-          console.log('💼 Work Type Modal closed');
-          setShowWorkTypeModal(false);
-        }} 
+        onClose={() => setShowWorkTypeModal(false)} 
       />
       <ReimbursementModal 
         isOpen={showReimbursementModal} 
-        onClose={() => {
-          console.log('💰 Reimbursement Modal closed');
-          setShowReimbursementModal(false);
-        }} 
+        onClose={() => setShowReimbursementModal(false)} 
       />
       <AssetRequestModal 
         isOpen={showAssetRequestModal} 
-        onClose={() => {
-          console.log('📦 Asset Request Modal closed');
-          setShowAssetRequestModal(false);
-        }} 
+        onClose={() => setShowAssetRequestModal(false)} 
       />
       <TicketModal 
         isOpen={showTicketModal} 
-        onClose={() => {
-          console.log('🎫 Ticket Modal closed');
-          setShowTicketModal(false);
-        }} 
+        onClose={() => setShowTicketModal(false)} 
       />
       <DashboardChartsModal 
         isOpen={showDashboardChartsModal} 
-        onClose={() => {
-          console.log('📊 Dashboard Charts Modal closed');
-          setShowDashboardChartsModal(false);
-        }} 
+        onClose={() => setShowDashboardChartsModal(false)} 
       />
       <DocumentRequestModal 
         isOpen={showDocumentRequestModal} 
-        onClose={() => {
-          console.log('📄 Document Request Modal closed');
-          setShowDocumentRequestModal(false);
-        }} 
+        onClose={() => setShowDocumentRequestModal(false)} 
       />
     </>
   );

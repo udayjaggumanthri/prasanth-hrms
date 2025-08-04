@@ -1,9 +1,29 @@
-/* Shift Requests Component Styles */
+/* App Layout */
+.oh-app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Main Content Area */
+.oh-main-content {
+  flex: 1;
+  margin-left: 280px; /* Width of expanded sidebar */
+  transition: margin-left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.oh-main-content.sidebar-collapsed {
+  margin-left: 70px; /* Width of collapsed sidebar */
+}
+
+/* Shift Requests Container */
 .oh-shift-requests {
   padding: 24px;
-  padding-top: 94px; /* Add space for fixed navbar (70px navbar + 24px original padding) */
-  min-height: calc(100vh - 70px);
+  
   background-color: #f8f9fa;
+  min-height: calc(100vh - 70px); /* Account for navbar height */
 }
 
 /* Header */
@@ -20,8 +40,8 @@
 }
 
 .oh-shift-requests__title {
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: 700; 
   color: #1a1a1a;
   margin: 0 0 8px 0;
   line-height: 1.2;
@@ -672,6 +692,14 @@
 }
 
 @media (max-width: 768px) {
+  .oh-main-content {
+    margin-left: 0;
+  }
+  
+  .oh-main-content.sidebar-collapsed {
+    margin-left: 0;
+  }
+  
   .oh-shift-requests {
     padding: 16px;
   }
