@@ -43,26 +43,58 @@
 .iv-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 32px;
 }
 
 .iv-header__left h1 {
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 600;
   color: #1a1a1a;
-  margin: 0 0 8px 0;
-}
-
-.iv-header__subtitle {
-  font-size: 16px;
-  color: #666;
   margin: 0;
 }
 
 .iv-header__actions {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Search Styles */
+.iv-search {
+  position: relative;
+}
+
+.iv-search__input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.iv-search__icon {
+  position: absolute;
+  left: 12px;
+  color: #9ca3af;
+  z-index: 1;
+}
+
+.iv-search__input {
+  width: 300px;
+  padding: 12px 12px 12px 44px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+  transition: border-color 0.2s ease;
+}
+
+.iv-search__input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.iv-search__input::placeholder {
+  color: #9ca3af;
 }
 
 .iv-btn {
@@ -78,23 +110,59 @@
   transition: all 0.2s ease;
 }
 
-.iv-btn--primary {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.iv-btn--primary:hover {
-  background-color: #2563eb;
-}
-
-.iv-btn--secondary {
+.iv-btn--filter {
   background-color: white;
   color: #374151;
   border: 1px solid #d1d5db;
 }
 
-.iv-btn--secondary:hover {
+.iv-btn--filter:hover {
   background-color: #f9fafb;
+}
+
+.iv-btn--create {
+  background-color: #ef4444;
+  color: white;
+}
+
+.iv-btn--create:hover {
+  background-color: #dc2626;
+}
+
+/* Content Body */
+.iv-content-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: 60px 20px;
+}
+
+/* No Records Styles */
+.iv-no-records {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.iv-no-records__icon {
+  opacity: 0.3;
+  color: #9ca3af;
+}
+
+.iv-no-records__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.iv-no-records__subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
 }
 
 /* Filters Styles */

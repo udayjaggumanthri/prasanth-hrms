@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Sidebar from '../../components/Layout/Sidebar';
 import Navbar from '../../components/Layout/Navbar';
 import QuickAccess from '../../components/QuickAccess/QuickAccess';
@@ -7,7 +7,6 @@ import { useSidebar } from '../../contexts/SidebarContext';
 
 const Recruitment: React.FC = () => {
   const { isCollapsed } = useSidebar();
-  const [searchTerm, setSearchTerm] = useState('');
 
   return (
     <div className="recruitment-page">
@@ -21,48 +20,28 @@ const Recruitment: React.FC = () => {
             <div className="header">
               <div className="header__left">
                 <h1>Recruitment</h1>
-                <p>Manage overall recruitment process and activities</p>
               </div>
               <div className="header__actions">
-                <button className="btn btn--primary">
+                <button className="btn btn--create">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                   </svg>
-                  New Recruitment
+                  Create
                 </button>
-              </div>
-            </div>
-            
-            <div className="filters">
-              <div className="search">
-                <input
-                  type="text"
-                  placeholder="Search recruitment..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-input"
-                />
               </div>
             </div>
 
             <div className="content-body">
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <h3>Total Recruitments</h3>
-                  <div className="stat-value">45</div>
-                  <p>Active recruitment processes</p>
+              <div className="no-records">
+                <div className="no-records__icon">
+                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="M21 21l-4.35-4.35"></path>
+                  </svg>
                 </div>
-                <div className="stat-card">
-                  <h3>Pending Approvals</h3>
-                  <div className="stat-value">12</div>
-                  <p>Waiting for management approval</p>
-                </div>
-                <div className="stat-card">
-                  <h3>Completed</h3>
-                  <div className="stat-value">128</div>
-                  <p>Successfully filled positions</p>
-                </div>
+                <h2 className="no-records__title">No Records found.</h2>
+                <p className="no-records__subtitle">At present, there is no ongoing recruitment.</p>
               </div>
             </div>
           </div>

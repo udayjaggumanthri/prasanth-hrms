@@ -18,112 +18,30 @@ const Stages: React.FC = () => {
             {/* Header */}
             <div className="header">
               <div className="header__left">
-                <h1>Recruitment Stages</h1>
-                <p>Configure and manage recruitment workflow stages</p>
+                <h1>Stage</h1>
               </div>
               <div className="header__actions">
-                <button className="btn btn--secondary">
-                  <span>Reset to Default</span>
-                </button>
-                <button className="btn btn--primary">
-                  <span>Add Stage</span>
+                <button className="btn btn--create">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Create
                 </button>
               </div>
             </div>
 
             {/* Content */}
             <div className="content-body">
-              <div className="stages-list">
-                <div className="stage-item">
-                  <div className="stage-number">1</div>
-                  <div className="stage-content">
-                    <h3>Application Review</h3>
-                    <p>Initial screening of candidate applications and resumes</p>
-                    <span className="stage-duration">Duration: 2-3 business days</span>
-                  </div>
-                  <div className="stage-actions">
-                    <button className="btn-small">Edit</button>
-                    <button className="btn-small">Configure</button>
-                  </div>
+              <div className="no-records">
+                <div className="no-records__icon">
+                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="M21 21l-4.35-4.35"></path>
+                  </svg>
                 </div>
-
-                <div className="stage-item">
-                  <div className="stage-number">2</div>
-                  <div className="stage-content">
-                    <h3>Phone Screening</h3>
-                    <p>Brief phone interview to assess basic qualifications</p>
-                    <span className="stage-duration">Duration: 30 minutes</span>
-                  </div>
-                  <div className="stage-actions">
-                    <button className="btn-small">Edit</button>
-                    <button className="btn-small">Configure</button>
-                  </div>
-                </div>
-
-                <div className="stage-item">
-                  <div className="stage-number">3</div>
-                  <div className="stage-content">
-                    <h3>Technical Assessment</h3>
-                    <p>Skills-based evaluation and coding challenges</p>
-                    <span className="stage-duration">Duration: 1-2 hours</span>
-                  </div>
-                  <div className="stage-actions">
-                    <button className="btn-small">Edit</button>
-                    <button className="btn-small">Configure</button>
-                  </div>
-                </div>
-
-                <div className="stage-item">
-                  <div className="stage-number">4</div>
-                  <div className="stage-content">
-                    <h3>Team Interview</h3>
-                    <p>In-depth interview with team members and managers</p>
-                    <span className="stage-duration">Duration: 1 hour</span>
-                  </div>
-                  <div className="stage-actions">
-                    <button className="btn-small">Edit</button>
-                    <button className="btn-small">Configure</button>
-                  </div>
-                </div>
-
-                <div className="stage-item">
-                  <div className="stage-number">5</div>
-                  <div className="stage-content">
-                    <h3>Final Interview</h3>
-                    <p>Final round with senior leadership and cultural fit assessment</p>
-                    <span className="stage-duration">Duration: 45 minutes</span>
-                  </div>
-                  <div className="stage-actions">
-                    <button className="btn-small">Edit</button>
-                    <button className="btn-small">Configure</button>
-                  </div>
-                </div>
-
-                <div className="stage-item">
-                  <div className="stage-number">6</div>
-                  <div className="stage-content">
-                    <h3>Reference Check</h3>
-                    <p>Verification of candidate background and references</p>
-                    <span className="stage-duration">Duration: 1-2 business days</span>
-                  </div>
-                  <div className="stage-actions">
-                    <button className="btn-small">Edit</button>
-                    <button className="btn-small">Configure</button>
-                  </div>
-                </div>
-
-                <div className="stage-item">
-                  <div className="stage-number">7</div>
-                  <div className="stage-content">
-                    <h3>Offer Negotiation</h3>
-                    <p>Job offer presentation and salary negotiation</p>
-                    <span className="stage-duration">Duration: 3-5 business days</span>
-                  </div>
-                  <div className="stage-actions">
-                    <button className="btn-small">Edit</button>
-                    <button className="btn-small">Configure</button>
-                  </div>
-                </div>
+                <h2 className="no-records__title">No Records found.</h2>
+                <p className="no-records__subtitle">No recruitment stages are currently available.</p>
               </div>
             </div>
           </div>

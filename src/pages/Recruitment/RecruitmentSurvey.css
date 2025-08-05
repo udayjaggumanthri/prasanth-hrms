@@ -1,41 +1,41 @@
-/* Recruitment Survey Styles */
 .recruitment-survey-page {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   background-color: #f8f9fa;
 }
 
 .rs-main-content {
   flex: 1;
-  margin-left: 280px;
+  margin-left: 250px;
   transition: margin-left 0.3s ease;
 }
 
 .rs-main-content--collapsed {
-  margin-left: 80px;
+  margin-left: 60px;
 }
 
 .rs-navbar {
-  width: calc(100% - 280px);
   position: fixed;
   top: 0;
+  left: 250px;
   right: 0;
+  height: 64px;
   z-index: 999;
-  transition: width 0.3s ease;
+  transition: left 0.3s ease;
 }
 
 .rs-navbar--collapsed {
-  width: calc(100% - 80px);
+  left: 60px;
 }
 
 .rs-content {
-  padding: 80px 0 0 0;
-  min-height: calc(100vh - 80px);
+  padding-top: 64px;
+  min-height: 100vh;
 }
 
 .rs-content-container {
-  padding: 32px;
-  max-width: 1400px;
+  padding: 24px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -43,15 +43,178 @@
 .rs-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 32px;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
-.rs-header__left h1 {
-  font-size: 32px;
-  font-weight: 700;
-  color: #1a1a1a;
+.rs-header-left {
+  flex: 1;
+}
+
+.rs-main-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.rs-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.rs-search-container {
+  display: flex;
+  align-items: center;
+}
+
+.rs-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.rs-search-icon {
+  position: absolute;
+  left: 12px;
+  color: #6c757d;
+  z-index: 1;
+}
+
+.rs-search-input {
+  width: 300px;
+  height: 40px;
+  padding: 0 12px 0 36px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  background-color: white;
+}
+
+.rs-search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.rs-filter-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rs-filter-button:hover {
+  background-color: #f8f9fa;
+  border-color: #007bff;
+}
+/* Tabs Section */
+.rs-tabs-section {
+  margin-bottom: 32px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.rs-tabs {
+  display: flex;
+  gap: 32px;
+}
+
+.rs-tab-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+}
+
+.rs-tab-button {
+  font-size: 16px;
+  font-weight: 500;
+  color: #6c757d;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 0;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.rs-tab-button--active {
+  color: #007bff;
+}
+
+.rs-tab-button--active::after {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #007bff;
+}
+
+.rs-tab-add-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 2px dashed #d0d7de;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6c757d;
+  transition: all 0.2s ease;
+}
+
+.rs-tab-add-button:hover {
+  border-color: #007bff;
+  color: #007bff;
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+/* Empty State */
+.rs-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  margin-top: 48px;
+}
+
+.rs-empty-state-content {
+  text-align: center;
+  max-width: 400px;
+}
+
+.rs-empty-state-icon {
+  margin-bottom: 24px;
+  color: #d0d7de;
+  display: flex;
+  justify-content: center;
+}
+
+.rs-empty-state-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
   margin: 0 0 8px 0;
+}
+
+.rs-empty-state-subtitle {
+  font-size: 16px;
+  color: #6c757d;
+  margin: 0;
+  line-height: 1.5;
 }
 
 .rs-header__subtitle {

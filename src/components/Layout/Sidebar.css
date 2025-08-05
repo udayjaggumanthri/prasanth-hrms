@@ -1,75 +1,111 @@
 /* Sidebar.css */
 
 .oh-sidebar {
-  width: 280px; /* Default width */
-  background-color: #2d3748; /* Dark grey */
-  color: #a0aec0; /* Light grey text */
+  width: 240px;
+  background: linear-gradient(180deg, #1a202c 0%, #2d3748 100%);
+  color: #e2e8f0;
   padding: 1.5rem 0.5rem;
-  transition: width 0.3s ease-in-out; /* Smooth transition for collapse/expand */
-  flex-shrink: 0; /* Prevent sidebar from shrinking */
-  height: 100vh; /* Full viewport height */
-  overflow-y: auto; /* Enable scrolling for long content */
-  overflow-x: hidden; /* Hide horizontal overflow */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 999; /* Ensure sidebar is above main content */
+  z-index: 999;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.oh-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.oh-sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.oh-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.oh-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .oh-sidebar.collapsed {
-  width: 80px; /* Collapsed width */
+  width: 80px;
 }
 
 .oh-sidebar__company {
   display: flex;
   align-items: center;
-  padding: 0 1rem 1.5rem; /* Padding for the header */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separator */
-  margin-bottom: 1.5rem;
-  box-sizing: content-box; /* To prevent padding from affecting width transition */
+  padding: 0 1rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.oh-sidebar__company::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 1rem;
+  right: 1rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(66, 153, 225, 0.6), transparent);
 }
 
 .oh-sidebar.collapsed .oh-sidebar__company {
   justify-content: center;
-  padding: 0 0.5rem 1.5rem;
+  padding: 0 0.5rem 2rem;
 }
 
 .oh-sidebar__company-initials {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #4299e1; /* Example blue */
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-    flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .oh-sidebar__company-details {
   margin-left: 1rem;
-  white-space: nowrap; /* Prevent text wrapping */
+  white-space: nowrap;
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .oh-sidebar__company-title {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
+  letter-spacing: -0.025em;
+  margin-bottom: 2px;
 }
 
 .oh-sidebar__company-link {
-  font-size: 10px;
-  color: #718096;
+  font-size: 11px;
+  color: #94a3b8;
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .oh-sidebar__company-link:hover {
-  color: #fff;
+  color: #4299e1;
 }
 
 
@@ -80,122 +116,235 @@
 }
 
 .oh-sidebar__menu-item {
-  margin-bottom: 0.5rem;
-  position: relative; /* For submenu positioning */
+  margin-bottom: 0.25rem;
+  position: relative;
 }
 
 .oh-sidebar__menu-link {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 1.5rem;
-  color: #a0aec0;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  color: #cbd5e0;
   text-decoration: none;
-  font-size: 0.95rem;
-  border-radius: 0.375rem;
-  transition: background-color 0.2s, color 0.2s;
-  overflow: hidden; /* Hide overflowing text when collapsed */
+  font-size: 0.925rem;
+  font-weight: 500;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
   white-space: nowrap;
+  position: relative;
+  margin: 0 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.oh-sidebar__menu-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(66, 153, 225, 0.1), rgba(72, 187, 120, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 12px;
+}
+
+/* Button-specific styles for menu buttons */
+.oh-sidebar__menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  justify-content: space-between;
+}
+
+.oh-sidebar__menu-button:focus {
+  outline: 2px solid #4299e1;
+  outline-offset: 2px;
+  border-radius: 12px;
 }
 
 .oh-sidebar__menu-link:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background: linear-gradient(135deg, rgba(66, 153, 225, 0.15), rgba(72, 187, 120, 0.1));
   color: #fff;
+  transform: translateX(6px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.oh-sidebar__menu-link:hover::before {
+  opacity: 1;
 }
 
 /* Active state for main menu items */
 .oh-sidebar__menu-link.oh-sidebar__menu-link--active {
-  background-color: #4299e1; /* Active background color */
+  background: linear-gradient(135deg, #4299e1, #3182ce);
   color: #fff;
+  box-shadow: 0 4px 20px rgba(66, 153, 225, 0.4);
+  transform: translateX(4px);
+}
+
+.oh-sidebar__menu-link.oh-sidebar__menu-link--active::before {
+  opacity: 0;
 }
 
 .oh-sidebar__menu-link.oh-sidebar__menu-link--active:hover {
-  background-color: #3182ce; /* Darker blue on hover for active item */
+  background: linear-gradient(135deg, #3182ce, #2c5282);
+  transform: translateX(6px) scale(1.02);
+  box-shadow: 0 6px 25px rgba(66, 153, 225, 0.5);
 }
 
+/* Arrow icon for expandable menus */
+.oh-sidebar__menu-arrow {
+  margin-left: auto;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.oh-sidebar__menu-link:hover .oh-sidebar__menu-arrow {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.oh-sidebar.collapsed .oh-sidebar__menu-arrow {
+  display: none;
+}
 
 .oh-sidebar.collapsed .oh-sidebar__menu-link {
   justify-content: center;
-  padding: 0.75rem 0.5rem; /* Adjust padding for icons only */
+  padding: 0.875rem 0.5rem;
+  margin: 0 0.5rem;
+  gap: 0;
 }
 
 .oh-sidebar.collapsed .oh-sidebar__menu-link span {
-  display: none; /* Hide text when collapsed */
+  display: none;
 }
 
 .oh-sidebar__menu-icon {
-  flex-shrink: 0; /* Prevent icon from shrinking */
-  display: flex; /* To center SVG if it's smaller than parent */
+  flex-shrink: 0;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px; /* Fixed width for icons */
-  height: 24px; /* Fixed height for icons */
+  width: 24px;
+  height: 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .oh-sidebar__menu-icon svg {
-  width: 20px; /* Adjust SVG size */
+  width: 20px;
   height: 20px;
-  color: #a0aec0; /* Default icon color */
+  color: #cbd5e0;
+  transition: all 0.3s ease;
 }
 
 .oh-sidebar__menu-link:hover .oh-sidebar__menu-icon svg,
 .oh-sidebar__menu-link--active .oh-sidebar__menu-icon svg {
-  color: #fff; /* White icon on hover/active */
+  color: #fff;
+  transform: scale(1.1);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .oh-sidebar__menu-icon img {
-  filter: brightness(0) invert(1); /* To make SVG/PNG icons white */
+  filter: brightness(0) invert(0.8);
+  transition: all 0.3s ease;
+}
+
+.oh-sidebar__menu-link:hover .oh-sidebar__menu-icon img,
+.oh-sidebar__menu-link--active .oh-sidebar__menu-icon img {
+  filter: brightness(0) invert(1);
+  transform: scale(1.1);
 }
 
 
 /* Submenu Styles */
 .oh-sidebar__submenu {
-  padding-left: 0.5rem; /* Indent submenus */
-  overflow: hidden; /* For transition effect */
-  max-height: 0; /* Initially hidden for transition */
-  transition: max-height 0.3s ease-out; /* Smooth slide transition */
+  padding-left: 0.75rem;
+  overflow: hidden;
+  max-height: 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 0.5rem;
 }
 
 .oh-sidebar__submenu[style*="display: block"] {
-    max-height: 500px; /* A value larger than the max possible height of the submenu */
+  max-height: 500px;
 }
 
 .oh-sidebar.collapsed .oh-sidebar__submenu {
-  display: none !important; /* Hide submenus completely when sidebar is collapsed */
+  display: none !important;
 }
 
 .oh-sidebar__submenu-items {
   list-style: none;
   padding: 0;
   margin: 0.5rem 0;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 0.5rem;
 }
 
 .oh-sidebar__submenu-item {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.125rem;
 }
-
-
 
 .oh-sidebar__submenu-link {
   display: block;
-  padding: 0.5rem 1.5rem;
+  padding: 0.625rem 1.25rem;
   color: #a0aec0;
   text-decoration: none;
-  font-size: 0.85rem;
-  border-radius: 0.375rem;
-  transition: background-color 0.2s, color 0.2s;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  position: relative;
+  letter-spacing: -0.025em;
+}
+
+.oh-sidebar__submenu-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 0;
+  background: linear-gradient(180deg, #4299e1, #48bb78);
+  border-radius: 2px;
+  transition: height 0.3s ease;
 }
 
 .oh-sidebar__submenu-link:hover {
-  background-color: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
+  transform: translateX(8px);
+  padding-left: 1.5rem;
+}
+
+.oh-sidebar__submenu-link:hover::before {
+  height: 20px;
 }
 
 /* Active state for submenu links */
 .oh-sidebar__submenu-link.oh-sidebar__submenu-link--active {
-  background-color: rgba(255, 255, 255, 0.08); /* A subtle highlight */
-  color: #fff;
+  background: rgba(66, 153, 225, 0.2);
+  color: #4299e1;
+  font-weight: 600;
+  transform: translateX(6px);
+  padding-left: 1.5rem;
+}
+
+.oh-sidebar__submenu-link.oh-sidebar__submenu-link--active::before {
+  height: 24px;
+  background: #4299e1;
 }
 
 /* Specific styling from original HTML */

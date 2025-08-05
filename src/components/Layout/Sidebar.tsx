@@ -90,9 +90,9 @@ const Sidebar: React.FC<SidebarProps> = ({
               <span className="oh-sidebar__company-title" style={{ fontSize: '13px' }}>
                 {companyInfo.companyName}.
               </span>
-              <a href="#" className="oh-sidebar__company-link" style={{ fontSize: '10px' }}>
+              <span className="oh-sidebar__company-link" style={{ fontSize: '10px' }}>
                 {companyInfo.tagline}
-              </a>
+              </span>
             </div>
           </>
         )}
@@ -149,11 +149,13 @@ const Sidebar: React.FC<SidebarProps> = ({
                 className={`oh-sidebar__menu-item ${menuIsActive ? 'oh-sidebar__menu-item--active' : ''}`}
               >
                 {hasSubmenu ? (
-                  <a
-                    className={`oh-sidebar__menu-link ${openSubmenus[dataId] ? 'oh-sidebar__menu-link--active' : ''}`}
+                  <button
+                    className={`oh-sidebar__menu-link oh-sidebar__menu-button ${openSubmenus[dataId] ? 'oh-sidebar__menu-link--active' : ''}`}
                     data-id={dataId}
                     onClick={() => handleMenuClick(dataId)}
-                    style={{ cursor: 'pointer' }}
+                    type="button"
+                    aria-expanded={openSubmenus[dataId]}
+                    aria-controls={dataId}
                   >
                     <div className="oh-sidebar__menu-icon">
                       <img
@@ -165,7 +167,25 @@ const Sidebar: React.FC<SidebarProps> = ({
                       />
                     </div>
                     {!isCollapsed && <span>{menues.menu}</span>}
-                  </a>
+                    {!isCollapsed && (
+                      <div className="oh-sidebar__menu-arrow">
+                        <svg 
+                          width="16" 
+                          height="16" 
+                          viewBox="0 0 24 24" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          strokeWidth="2"
+                          style={{ 
+                            transform: openSubmenus[dataId] ? 'rotate(180deg)' : 'rotate(0deg)',
+                            transition: 'transform 0.2s ease'
+                          }}
+                        >
+                          <polyline points="6,9 12,15 18,9"></polyline>
+                        </svg>
+                      </div>
+                    )}
+                  </button>
                 ) : (
                   <NavLink
                     to={menues.redirect || '#'}
@@ -219,10 +239,12 @@ const Sidebar: React.FC<SidebarProps> = ({
               className="oh-sidebar__menu-item"
               data-id="configNav"
             >
-              <a
-                className={`oh-sidebar__menu-link ${openSubmenus['configNav'] ? 'oh-sidebar__menu-link--active' : ''}`}
+              <button
+                className={`oh-sidebar__menu-link oh-sidebar__menu-button ${openSubmenus['configNav'] ? 'oh-sidebar__menu-link--active' : ''}`}
                 onClick={() => handleMenuClick('configNav')}
-                style={{ cursor: 'pointer' }}
+                type="button"
+                aria-expanded={openSubmenus['configNav']}
+                aria-controls="configNav"
               >
                 <div className="oh-sidebar__menu-icon">
                   {/* Inline SVG for Configuration icon */}
@@ -258,7 +280,25 @@ const Sidebar: React.FC<SidebarProps> = ({
                   </svg>
                 </div>
                 {!isCollapsed && <span>Configuration</span>}
-              </a>
+                {!isCollapsed && (
+                  <div className="oh-sidebar__menu-arrow">
+                    <svg 
+                      width="16" 
+                      height="16" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2"
+                      style={{ 
+                        transform: openSubmenus['configNav'] ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.2s ease'
+                      }}
+                    >
+                      <polyline points="6,9 12,15 18,9"></polyline>
+                    </svg>
+                  </div>
+                )}
+              </button>
               <div
                 className="oh-sidebar__submenu"
                 id="configNav"

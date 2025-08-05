@@ -322,3 +322,108 @@
     width: 100%;
   }
 }
+
+/* Simple Header Styles */
+.rp-simple-header {
+  margin-bottom: 40px;
+  padding: 0 8px;
+}
+
+.rp-simple-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Empty State Styles */
+.rp-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  padding: 40px 20px;
+}
+
+.rp-empty-state-content {
+  text-align: center;
+  max-width: 400px;
+}
+
+.rp-empty-state-icon {
+  margin-bottom: 24px;
+  opacity: 0.4;
+}
+
+.rp-empty-state-icon svg {
+  width: 100px;
+  height: 100px;
+  stroke: #8e8e93;
+  stroke-width: 1.5;
+}
+
+.rp-empty-state-text {
+  color: #8e8e93;
+}
+
+.rp-empty-state-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.rp-empty-state-subtitle {
+  font-size: 14px;
+  color: #8e8e93;
+  margin: 0;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* Responsive Design for Empty State */
+@media (max-width: 768px) {
+  .rp-simple-header {
+    margin-bottom: 32px;
+    padding: 0 4px;
+  }
+  
+  .rp-simple-title {
+    font-size: 28px;
+  }
+  
+  .rp-empty-state {
+    min-height: calc(100vh - 160px);
+    padding: 32px 16px;
+  }
+  
+  .rp-empty-state-icon svg {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .rp-empty-state-title {
+    font-size: 18px;
+  }
+  
+  .rp-empty-state-subtitle {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rp-simple-title {
+    font-size: 24px;
+  }
+  
+  .rp-empty-state-icon svg {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .rp-empty-state-title {
+    font-size: 16px;
+  }
+}
