@@ -20,13 +20,9 @@ interface DocumentRequest {
   completedDate?: string;
   remarks?: string;
   urgency: 'low' | 'medium' | 'high';
-  title?: string;
-  format?: string;
-  maxSize?: number;
-  description?: string;
 }
 
-interface CreateRequestForm {
+interface CreateDocumentRequestForm {
   title: string;
   employee: string;
   format: string;
@@ -117,7 +113,7 @@ const DocumentRequests: React.FC = () => {
     message: string;
   } | null>(null);
   
-  const [createForm, setCreateForm] = useState<CreateRequestForm>({
+  const [createForm, setCreateForm] = useState<CreateDocumentRequestForm>({
     title: '',
     employee: '',
     format: '',
@@ -131,8 +127,20 @@ const DocumentRequests: React.FC = () => {
     setTimeout(() => setNotification(null), 4000);
   };
 
+  // Generate next Request ID
+  const generateNextRequestId = () => {
+    const existingIds = requests.map(req => req.requestId);
+    const numericIds = existingIds
+      .filter(id => id.match(/^DOC\d+$/))
+      .map(id => parseInt(id.replace('DOC', '')))
+      .sort((a, b) => b - a);
+    
+    const nextNumber = numericIds.length > 0 ? numericIds[0] + 1 : 1;
+    return `DOC${nextNumber.toString().padStart(3, '0')}`;
+  };
+
   // Handle form input changes
-  const handleInputChange = (field: keyof CreateRequestForm, value: string) => {
+  const handleInputChange = (field: keyof CreateDocumentRequestForm, value: string) => {
     setCreateForm(prev => ({
       ...prev,
       [field]: value
@@ -150,29 +158,11 @@ const DocumentRequests: React.FC = () => {
     });
   };
 
-  // Generate next Request ID
-  const generateNextRequestId = () => {
-    const existingIds = requests.map(req => req.requestId);
-    const numericIds = existingIds
-      .filter(id => id.match(/^DOC\d+$/))
-      .map(id => parseInt(id.replace('DOC', '')))
-      .sort((a, b) => b - a);
-    
-    const nextNumber = numericIds.length > 0 ? numericIds[0] + 1 : 1;
-    return `DOC${nextNumber.toString().padStart(3, '0')}`;
-  };
-
-  // Handle create request
+  // Handle create document request
   const handleCreateRequest = async () => {
     // Validation
     if (!createForm.title || !createForm.employee || !createForm.format) {
       showNotification('error', 'Please fill in all required fields');
-      return;
-    }
-
-    // Max size validation
-    if (createForm.maxSize && (isNaN(Number(createForm.maxSize)) || Number(createForm.maxSize) <= 0)) {
-      showNotification('error', 'Please enter a valid max size');
       return;
     }
 
@@ -186,16 +176,13 @@ const DocumentRequests: React.FC = () => {
         id: Date.now().toString(),
         requestId: generateNextRequestId(),
         employeeName: createForm.employee,
-        employeeId: 'EMP001', // This would come from employee selection
+        employeeId: 'EMP001', // This would come from selected employee
         documentType: createForm.title,
-        purpose: createForm.description || 'General Request',
+        purpose: createForm.description || 'Not specified',
         requestDate: new Date().toISOString().split('T')[0],
         status: 'pending',
         urgency: 'medium',
-        title: createForm.title,
-        format: createForm.format,
-        maxSize: createForm.maxSize ? Number(createForm.maxSize) : undefined,
-        description: createForm.description
+        remarks: `Format: ${createForm.format}, Max Size: ${createForm.maxSize}MB`
       };
 
       setRequests(prev => [newRequest, ...prev]);
@@ -203,7 +190,7 @@ const DocumentRequests: React.FC = () => {
       resetForm();
       showNotification('success', `Document request "${createForm.title}" created successfully!`);
     } catch (error) {
-      showNotification('error', 'Failed to create request. Please try again.');
+      showNotification('error', 'Failed to create document request. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -294,7 +281,7 @@ const DocumentRequests: React.FC = () => {
             </div>
             <div className="oh-document-requests-actions">
               <button 
-                className="oh-btn oh-btn--primary"
+                className="oh-btn oh-btn--primary oh-btn-create-main"
                 onClick={() => setShowCreateModal(true)}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -577,7 +564,7 @@ const DocumentRequests: React.FC = () => {
         </div>
       )}
 
-      {/* Create Request Modal */}
+      {/* Create Document Request Modal */}
       {showCreateModal && (
         <div className="oh-modal-overlay">
           <div className="oh-create-request-modal">
@@ -598,6 +585,7 @@ const DocumentRequests: React.FC = () => {
             </div>
 
             <div className="oh-modal-body">
+              {/* Document Request Information */}
               <div className="oh-form-section">
                 <h3 className="oh-section-title">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -607,7 +595,7 @@ const DocumentRequests: React.FC = () => {
                     <line x1="16" y1="17" x2="8" y2="17"></line>
                     <polyline points="10,9 9,9 8,9"></polyline>
                   </svg>
-                  Request Details
+                  Document Request Details
                 </h3>
                 <div className="oh-form-grid">
                   <div className="oh-form-field">
@@ -634,9 +622,9 @@ const DocumentRequests: React.FC = () => {
                       <option value="">Select employee</option>
                       <option value="Prasanth Kathi">Prasanth Kathi</option>
                       <option value="Sarah Wilson">Sarah Wilson</option>
-                      <option value="Mike Johnson">Mike Johnson</option>
-                      <option value="Anna Smith">Anna Smith</option>
-                      <option value="David Brown">David Brown</option>
+                      <option value="Michael Brown">Michael Brown</option>
+                      <option value="Emma Davis">Emma Davis</option>
+                      <option value="James Wilson">James Wilson</option>
                     </select>
                   </div>
                   <div className="oh-form-field">
@@ -650,11 +638,11 @@ const DocumentRequests: React.FC = () => {
                     >
                       <option value="">Select format</option>
                       <option value="PDF">PDF</option>
-                      <option value="Word Document">Word Document</option>
+                      <option value="DOC">DOC</option>
+                      <option value="DOCX">DOCX</option>
+                      <option value="JPG">JPG</option>
+                      <option value="PNG">PNG</option>
                       <option value="Excel">Excel</option>
-                      <option value="PowerPoint">PowerPoint</option>
-                      <option value="Image">Image</option>
-                      <option value="Text">Text</option>
                     </select>
                   </div>
                   <div className="oh-form-field">
@@ -666,7 +654,7 @@ const DocumentRequests: React.FC = () => {
                       max="100"
                       value={createForm.maxSize}
                       onChange={(e) => handleInputChange('maxSize', e.target.value)}
-                      placeholder="Enter max file size"
+                      placeholder="Enter maximum file size"
                       className="oh-form-input"
                     />
                   </div>
@@ -676,7 +664,7 @@ const DocumentRequests: React.FC = () => {
                       id="description"
                       value={createForm.description}
                       onChange={(e) => handleInputChange('description', e.target.value)}
-                      placeholder="Enter request description or purpose"
+                      placeholder="Enter description or purpose of the document request"
                       className="oh-form-textarea"
                       rows={4}
                     />
@@ -697,7 +685,7 @@ const DocumentRequests: React.FC = () => {
                 Cancel
               </button>
               <button 
-                className="oh-btn oh-btn-primary oh-btn-create"
+                className="oh-btn oh-btn--primary oh-btn-create"
                 onClick={handleCreateRequest}
                 disabled={isLoading}
               >

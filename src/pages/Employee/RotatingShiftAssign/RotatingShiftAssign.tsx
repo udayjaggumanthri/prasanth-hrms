@@ -40,87 +40,12 @@ interface Assignment {
   assignedDate: string;
 }
 
-interface CreateRotatingShiftAssignForm {
-  employee: string;
-  shiftPattern: string;
-  startDate: string;
-  endDate: string;
-  rotationPeriod: string;
-  description: string;
-}
-
 const RotatingShiftAssign: React.FC = () => {
   const [viewMode, setViewMode] = useState<'assignments' | 'patterns'>('assignments');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [departmentFilter, setDepartmentFilter] = useState<string>('all');
   const { isCollapsed } = useSidebar();
-
-  // Create modal state
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [notification, setNotification] = useState<{
-    type: 'success' | 'error' | 'warning';
-    message: string;
-  } | null>(null);
-
-  const [createForm, setCreateForm] = useState<CreateRotatingShiftAssignForm>({
-    employee: '',
-    shiftPattern: '',
-    startDate: '',
-    endDate: '',
-    rotationPeriod: '',
-    description: ''
-  });
-
-  // Notification system
-  const showNotification = (type: 'success' | 'error' | 'warning', message: string) => {
-    setNotification({ type, message });
-    setTimeout(() => setNotification(null), 5000);
-  };
-
-  // Form handlers
-  const handleInputChange = (field: keyof CreateRotatingShiftAssignForm, value: string) => {
-    setCreateForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  // Reset form
-  const resetForm = () => {
-    setCreateForm({
-      employee: '',
-      shiftPattern: '',
-      startDate: '',
-      endDate: '',
-      rotationPeriod: '',
-      description: ''
-    });
-  };
-
-  // Handle create rotating shift assignment
-  const handleCreateRotatingShiftAssign = async () => {
-    // Validate required fields
-    if (!createForm.employee || !createForm.shiftPattern || !createForm.startDate || !createForm.description) {
-      showNotification('error', 'Please fill in all required fields');
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      resetForm();
-      setShowCreateModal(false);
-      setIsLoading(false);
-      showNotification('success', 'Rotating shift assignment created successfully!');
-    } catch (error) {
-      setIsLoading(false);
-      showNotification('error', 'Failed to create rotating shift assignment. Please try again.');
-    }
-  };
 
   // Mock data for shift patterns
   const mockShiftPatterns: ShiftPattern[] = [
@@ -282,10 +207,7 @@ const RotatingShiftAssign: React.FC = () => {
                 <p className="oh-page-subtitle">Manage rotating shift assignments and patterns</p>
               </div>
               <div className="oh-page-header__actions">
-                <button 
-                  className="oh-btn-create-main"
-                  onClick={() => setShowCreateModal(true)}
-                >
+                <button className="oh-btn oh-btn--primary">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -584,152 +506,6 @@ const RotatingShiftAssign: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Notification */}
-      {notification && (
-        <div className={`oh-notification oh-notification--${notification.type}`}>
-          <div className="oh-notification__content">
-            <span className="oh-notification__message">{notification.message}</span>
-            <button 
-              className="oh-notification__close"
-              onClick={() => setNotification(null)}
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Create Rotating Shift Assignment Modal */}
-      {showCreateModal && (
-        <div className="oh-modal-overlay" onClick={() => setShowCreateModal(false)}>
-          <div className="oh-modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="oh-modal-header">
-              <h2>Assign Rotating Shift</h2>
-              <button 
-                className="oh-modal-close"
-                onClick={() => setShowCreateModal(false)}
-              >
-                ×
-              </button>
-            </div>
-            
-            <div className="oh-modal-body">
-              <form className="oh-create-form">
-                <div className="oh-form-row">
-                  <div className="oh-form-group">
-                    <label className="oh-form-label">Employee *</label>
-                    <select 
-                      className="oh-form-select"
-                      value={createForm.employee}
-                      onChange={(e) => handleInputChange('employee', e.target.value)}
-                    >
-                      <option value="">Select Employee</option>
-                      <option value="john-doe">John Doe</option>
-                      <option value="jane-smith">Jane Smith</option>
-                      <option value="mike-johnson">Mike Johnson</option>
-                      <option value="sarah-wilson">Sarah Wilson</option>
-                      <option value="david-brown">David Brown</option>
-                      <option value="lisa-garcia">Lisa Garcia</option>
-                    </select>
-                  </div>
-                  
-                  <div className="oh-form-group">
-                    <label className="oh-form-label">Shift Pattern *</label>
-                    <select 
-                      className="oh-form-select"
-                      value={createForm.shiftPattern}
-                      onChange={(e) => handleInputChange('shiftPattern', e.target.value)}
-                    >
-                      <option value="">Select Shift Pattern</option>
-                      <option value="morning-afternoon-night">Morning-Afternoon-Night</option>
-                      <option value="day-night-off">Day-Night-Off</option>
-                      <option value="continental">Continental Shifts</option>
-                      <option value="dupont">DuPont Schedule</option>
-                      <option value="pitman">Pitman Schedule</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="oh-form-row">
-                  <div className="oh-form-group">
-                    <label className="oh-form-label">Start Date *</label>
-                    <input 
-                      type="date"
-                      className="oh-form-input"
-                      value={createForm.startDate}
-                      onChange={(e) => handleInputChange('startDate', e.target.value)}
-                    />
-                  </div>
-                  
-                  <div className="oh-form-group">
-                    <label className="oh-form-label">End Date</label>
-                    <input 
-                      type="date"
-                      className="oh-form-input"
-                      value={createForm.endDate}
-                      onChange={(e) => handleInputChange('endDate', e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="oh-form-row">
-                  <div className="oh-form-group">
-                    <label className="oh-form-label">Rotation Period (Days)</label>
-                    <select 
-                      className="oh-form-select"
-                      value={createForm.rotationPeriod}
-                      onChange={(e) => handleInputChange('rotationPeriod', e.target.value)}
-                    >
-                      <option value="">Select Period</option>
-                      <option value="7">Weekly (7 days)</option>
-                      <option value="14">Bi-weekly (14 days)</option>
-                      <option value="21">3 weeks (21 days)</option>
-                      <option value="28">Monthly (28 days)</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="oh-form-group">
-                  <label className="oh-form-label">Description *</label>
-                  <textarea 
-                    className="oh-form-textarea"
-                    placeholder="Enter description for the rotating shift assignment..."
-                    value={createForm.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    rows={4}
-                  />
-                </div>
-              </form>
-            </div>
-            
-            <div className="oh-modal-footer">
-              <button 
-                type="button"
-                className="oh-btn oh-btn--secondary"
-                onClick={() => setShowCreateModal(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                type="button"
-                className="oh-btn oh-btn--primary"
-                onClick={handleCreateRotatingShiftAssign}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <div className="oh-loading-spinner"></div>
-                    Assigning...
-                  </>
-                ) : (
-                  'Assign Shift'
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

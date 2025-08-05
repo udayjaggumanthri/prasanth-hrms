@@ -36,88 +36,13 @@ interface WorkTypeRequest {
   comments?: string;
 }
 
-interface CreateWorkTypeRequestForm {
-  employee: string;
-  requestingWorkType: string;
-  requestedDate: string;
-  requestedTill: string;
-  description: string;
-  permanentRequest: boolean;
-}
-
 const WorkTypeRequests: React.FC = () => {
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [notification, setNotification] = useState<{
-    type: 'success' | 'error' | 'info';
-    message: string;
-  } | null>(null);
-  
-  const [createForm, setCreateForm] = useState<CreateWorkTypeRequestForm>({
-    employee: '',
-    requestingWorkType: '',
-    requestedDate: '',
-    requestedTill: '',
-    description: '',
-    permanentRequest: false
-  });
-  
   const { isCollapsed } = useSidebar();
-
-  // Show notification
-  const showNotification = (type: 'success' | 'error' | 'info', message: string) => {
-    setNotification({ type, message });
-    setTimeout(() => setNotification(null), 4000);
-  };
-
-  // Handle form input changes
-  const handleInputChange = (field: keyof CreateWorkTypeRequestForm, value: string | boolean) => {
-    setCreateForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  // Reset form
-  const resetForm = () => {
-    setCreateForm({
-      employee: '',
-      requestingWorkType: '',
-      requestedDate: '',
-      requestedTill: '',
-      description: '',
-      permanentRequest: false
-    });
-  };
-
-  // Handle create work type request
-  const handleCreateWorkTypeRequest = async () => {
-    // Validation
-    if (!createForm.employee || !createForm.requestingWorkType || !createForm.requestedDate || !createForm.description) {
-      showNotification('error', 'Please fill in all required fields');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setShowCreateModal(false);
-      resetForm();
-      showNotification('success', 'Work type request created successfully!');
-    } catch (error) {
-      showNotification('error', 'Failed to create work type request. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // Mock data for work type requests
   const mockRequests: WorkTypeRequest[] = [
@@ -308,18 +233,6 @@ const WorkTypeRequests: React.FC = () => {
               <div className="oh-page-header__content">
                 <h1 className="oh-page-title">Work Type Requests</h1>
                 <p className="oh-page-subtitle">Manage and track work type change requests</p>
-              </div>
-              <div className="oh-page-header__actions">
-                <button 
-                  className="oh-btn-create-main"
-                  onClick={() => setShowCreateModal(true)}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                  Create Work Type Request
-                </button>
               </div>
             </div>
 
@@ -624,145 +537,6 @@ const WorkTypeRequests: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Notification */}
-      {notification && (
-        <div className={`oh-notification oh-notification--${notification.type}`}>
-          <div className="oh-notification__content">
-            <span className="oh-notification__message">{notification.message}</span>
-            <button 
-              className="oh-notification__close"
-              onClick={() => setNotification(null)}
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Create Work Type Request Modal */}
-      {showCreateModal && (
-        <div className="oh-modal-overlay" onClick={() => setShowCreateModal(false)}>
-          <div className="oh-modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="oh-modal-header">
-              <h2>Create Work Type Request</h2>
-              <button 
-                className="oh-modal-close"
-                onClick={() => setShowCreateModal(false)}
-              >
-                ×
-              </button>
-            </div>
-            
-            <div className="oh-modal-body">
-              <form className="oh-create-form">
-                <div className="oh-form-row">
-                  <div className="oh-form-group">
-                    <label className="oh-form-label">Employee *</label>
-                    <select 
-                      className="oh-form-select"
-                      value={createForm.employee}
-                      onChange={(e) => handleInputChange('employee', e.target.value)}
-                    >
-                      <option value="">Select Employee</option>
-                      <option value="john-doe">John Doe</option>
-                      <option value="jane-smith">Jane Smith</option>
-                      <option value="mike-johnson">Mike Johnson</option>
-                      <option value="sarah-wilson">Sarah Wilson</option>
-                    </select>
-                  </div>
-                  
-                  <div className="oh-form-group">
-                    <label className="oh-form-label">Requesting Work Type *</label>
-                    <select 
-                      className="oh-form-select"
-                      value={createForm.requestingWorkType}
-                      onChange={(e) => handleInputChange('requestingWorkType', e.target.value)}
-                    >
-                      <option value="">Select Work Type</option>
-                      <option value="full-time">Full Time</option>
-                      <option value="part-time">Part Time</option>
-                      <option value="contract">Contract</option>
-                      <option value="remote">Remote Work</option>
-                      <option value="hybrid">Hybrid Work</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="oh-form-row">
-                  <div className="oh-form-group">
-                    <label className="oh-form-label">Requested Date *</label>
-                    <input 
-                      type="date"
-                      className="oh-form-input"
-                      value={createForm.requestedDate}
-                      onChange={(e) => handleInputChange('requestedDate', e.target.value)}
-                    />
-                  </div>
-                  
-                  <div className="oh-form-group">
-                    <label className="oh-form-label">Requested Till</label>
-                    <input 
-                      type="date"
-                      className="oh-form-input"
-                      value={createForm.requestedTill}
-                      onChange={(e) => handleInputChange('requestedTill', e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="oh-form-group">
-                  <label className="oh-form-label">Description *</label>
-                  <textarea 
-                    className="oh-form-textarea"
-                    placeholder="Enter reason for work type change request..."
-                    value={createForm.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    rows={4}
-                  />
-                </div>
-
-                <div className="oh-form-group">
-                  <label className="oh-form-checkbox">
-                    <input 
-                      type="checkbox"
-                      checked={createForm.permanentRequest}
-                      onChange={(e) => handleInputChange('permanentRequest', e.target.checked)}
-                    />
-                    <span className="oh-form-checkbox__checkmark"></span>
-                    <span className="oh-form-checkbox__label">This is a permanent work type change request</span>
-                  </label>
-                </div>
-              </form>
-            </div>
-            
-            <div className="oh-modal-footer">
-              <button 
-                type="button"
-                className="oh-btn oh-btn--secondary"
-                onClick={() => setShowCreateModal(false)}
-              >
-                Cancel
-              </button>
-              <button 
-                type="button"
-                className="oh-btn oh-btn--primary"
-                onClick={handleCreateWorkTypeRequest}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <div className="oh-loading-spinner"></div>
-                    Creating...
-                  </>
-                ) : (
-                  'Create Request'
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
